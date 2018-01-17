@@ -1,0 +1,26 @@
+{
+  "name": "MazeSolver",
+  "version": "1.0.0",
+  "description": "## Background MazeSolver is a visualization tool for maze generation and path solving using JavaScript and HTML5 Canvas. It provides insight into the time and behavior of popular maze generation and traversal algorithms, such as Depth-First Search (DFS), Breadth-First Search (BFS), Dijkstra's Algorithm and A*.",
+  "main": "webpack.config.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bah87/MazeSolver.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bah87/MazeSolver/issues"
+  },
+  "homepage": "https://github.com/bah87/MazeSolver#readme",
+  "dependencies": {
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.2",
+    "babel-preset-es2015": "^6.24.1",
+    "webpack": "^3.10.0"
+  }
+}

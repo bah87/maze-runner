@@ -9,8 +9,14 @@ class View {
   makeGrid() {
     let html = "";
     for (let i = 0; i < this.grid.size; i++) {
-      
+      html += "<ul>";
+      for (let j = 0; j < this.grid.size; j++) {
+        html += "<li></li>";
+      }
+      html += "</ul>";
     }
+
+    this.$el.html(html);
   }
 
   render() {
