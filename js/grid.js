@@ -1,7 +1,12 @@
+const BFS = require('./bfs.js');
+
 class Grid {
   constructor(size) {
     this.size = size;
     this.array = Grid.makeGrid(size);
+    this.startPos = Math.floor(Math.random * size);
+    this.goalPos = Math.floor(Math.random * size);
+    this.bfs = new BFS(this.startPos, this.goalPos, this);
   }
 }
 
@@ -18,3 +23,5 @@ Grid.makeGrid = size => {
 
   return grid;
 };
+
+module.exports = Grid;

@@ -9,7 +9,7 @@ class Node {
 Node.checkDir = (parent, row, col, grid) => {
   row = parent.pos[0] + row;
   col = parent.pos[1] + col;
-  return grid.array[row][col] ? new Node(row, col, parent) : null;
+  return grid.array[row][col] ? new Node([row, col], parent, grid) : null;
 };
 
 Node.getNeighbors = (parent, grid) => {
