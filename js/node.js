@@ -2,7 +2,7 @@ class Node {
   constructor(pos, parent, grid) {
     this.pos = pos;
     this.parent = parent;
-    this.neighbors = Node.getNeighbors(parent, grid);
+    // this.neighbors = Node.getNeighbors(parent, grid);
   }
 }
 

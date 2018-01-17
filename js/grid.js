@@ -10,6 +10,11 @@ class Grid {
   }
 }
 
+Grid.placeEndpoints = size => {
+  let point = Math.floor(Math.random * size * size);
+  
+};
+
 Grid.makeGrid = size => {
   let grid = [];
   for (let i = 0; i < size; i++) {

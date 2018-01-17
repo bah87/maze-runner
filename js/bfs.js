@@ -17,7 +17,7 @@ class BFS {
         break;
       }
 
-      current.neighbors.forEach(neighbor => {
+      Node.getNeighbors(current, this.grid).forEach(neighbor => {
         if (!this.queue.includes(neighbor) && !this.visited[neighbor]) {
           this.queue.push(neighbor);
         }
@@ -32,6 +32,11 @@ class BFS {
     }
 
     return path.map(node => { return node.pos; });
+  }
+
+  solve() {
+    this.traverseGrid();
+    return this.traversePath();
   }
 }
 

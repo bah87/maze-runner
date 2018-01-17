@@ -4,6 +4,9 @@ class View {
   constructor($el) {
     this.$el = $el;
     this.grid = new Grid(50);
+    this.makeGrid();
+    this.path = this.grid.bfs.solve();
+    console.log(this.path);
   }
 
   makeGrid() {
@@ -11,12 +14,16 @@ class View {
     for (let i = 0; i < this.grid.size; i++) {
       html += "<ul>";
       for (let j = 0; j < this.grid.size; j++) {
-        html += "<li></li>";
+        if (this.grid.array[i][j]) {
+          html += "<li class=path></li>";
+        } else if ([]) {
+          html += "<li class=wall></li>";
+        }
       }
       html += "</ul>";
     }
 
-    this.$el.html(html);
+  this.$el.html(html);
   }
 
   render() {
