@@ -108,9 +108,13 @@ var View = function () {
       for (var i = 0; i < this.grid.size; i++) {
         html += "<ul>";
         for (var j = 0; j < this.grid.size; j++) {
-          if (this.grid.array[i][j]) {
+          if (i === this.grid.startPos[0] && j === this.grid.startPos[1]) {
+            html += "<li class=start></li>";
+          } else if (i === this.grid.goalPos[0] && j === this.grid.goalPos[1]) {
+            html += "<li class=goal></li>";
+          } else if (this.grid.array[i][j]) {
             html += "<li class=path></li>";
-          } else if (true) {
+          } else {
             html += "<li class=wall></li>";
           }
         }
@@ -145,13 +149,19 @@ var Grid = function Grid(size) {
 
   this.size = size;
   this.array = Grid.makeGrid(size);
-  this.startPos = Math.floor(Math.random * size);
-  this.goalPos = Math.floor(Math.random * size);
+  this.startPos = Grid.placeEndpoints(this);
+  this.goalPos = Grid.placeEndpoints(this);
   this.bfs = new BFS(this.startPos, this.goalPos, this);
 };
 
-Grid.placeEndpoints = function (size) {
-  var point = Math.floor(Math.random * size * size);
+Grid.placeEndpoints = function (grid) {
+  var i = Math.floor(Math.random() * grid.size);
+  var j = Math.floor(Math.random() * grid.size);
+  while (!grid.array[i][j]) {
+    i = Math.floor(Math.random() * grid.size);
+    j = Math.floor(Math.random() * grid.size);
+  }
+  return [i, j];
 };
 
 Grid.makeGrid = function (size) {

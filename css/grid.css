@@ -16,6 +16,14 @@ li {
 
 }
 
+.start {
+  background-color: green;
+}
+
+.goal {
+  background-color: red;
+}
+
 .wall {
   background-color: black;
 }

@@ -4,15 +4,20 @@ class Grid {
   constructor(size) {
     this.size = size;
     this.array = Grid.makeGrid(size);
-    this.startPos = Math.floor(Math.random * size);
-    this.goalPos = Math.floor(Math.random * size);
+    this.startPos = Grid.placeEndpoints(this);
+    this.goalPos = Grid.placeEndpoints(this);
     this.bfs = new BFS(this.startPos, this.goalPos, this);
   }
 }
 
-Grid.placeEndpoints = size => {
-  let point = Math.floor(Math.random * size * size);
-  
+Grid.placeEndpoints = grid => {
+  let i = Math.floor(Math.random() * grid.size);
+  let j = Math.floor(Math.random() * grid.size);
+  while (!grid.array[i][j]) {
+    i = Math.floor(Math.random() * grid.size);
+    j = Math.floor(Math.random() * grid.size);
+  }
+  return [i, j];
 };
 
 Grid.makeGrid = size => {

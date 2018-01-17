@@ -14,9 +14,13 @@ class View {
     for (let i = 0; i < this.grid.size; i++) {
       html += "<ul>";
       for (let j = 0; j < this.grid.size; j++) {
-        if (this.grid.array[i][j]) {
+        if (i === this.grid.startPos[0] && j === this.grid.startPos[1]) {
+          html += "<li class=start></li>";
+        } else if (i === this.grid.goalPos[0] && j === this.grid.goalPos[1]) {
+          html += "<li class=goal></li>";
+        } else if (this.grid.array[i][j]) {
           html += "<li class=path></li>";
-        } else if ([]) {
+        } else {
           html += "<li class=wall></li>";
         }
       }
