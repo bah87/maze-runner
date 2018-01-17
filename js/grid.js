@@ -1,4 +1,5 @@
 const BFS = require('./bfs.js');
+const Node = require('./node.js');
 
 class Grid {
   constructor(size) {
@@ -17,20 +18,25 @@ Grid.placeEndpoints = grid => {
     i = Math.floor(Math.random() * grid.size);
     j = Math.floor(Math.random() * grid.size);
   }
-  return [i, j];
+  return [i + 1, j + 1];
 };
 
 Grid.makeGrid = size => {
-  let grid = [];
+  let nullRow = new Array(size + 2).fill(null);
+  let grid = [nullRow];
   for (let i = 0; i < size; i++) {
-    let row = [];
+    let row = [null];
     for (let j = 0; j < size; j++) {
-      let randBool = Math.random() < 0.3 ? false : true;
-      row.push(randBool);
+      if (Math.random() > 0.25) {
+        row.push(new Node([i, j]));
+      } else {
+        row.push(null);
+      }
     }
+    row.push(null);
     grid.push(row);
   }
-
+  grid.push(nullRow);
   return grid;
 };
 

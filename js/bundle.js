@@ -95,7 +95,7 @@ var View = function () {
     _classCallCheck(this, View);
 
     this.$el = $el;
-    this.grid = new Grid(50);
+    this.grid = new Grid(10);
     this.makeGrid();
     this.path = this.grid.bfs.solve();
     console.log(this.path);
@@ -105,9 +105,9 @@ var View = function () {
     key: "makeGrid",
     value: function makeGrid() {
       var html = "";
-      for (var i = 0; i < this.grid.size; i++) {
+      for (var i = 1; i <= this.grid.size; i++) {
         html += "<ul>";
-        for (var j = 0; j < this.grid.size; j++) {
+        for (var j = 1; j <= this.grid.size; j++) {
           if (i === this.grid.startPos[0] && j === this.grid.startPos[1]) {
             html += "<li class=start></li>";
           } else if (i === this.grid.goalPos[0] && j === this.grid.goalPos[1]) {
@@ -143,6 +143,7 @@ module.exports = View;
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var BFS = __webpack_require__(3);
+var Node = __webpack_require__(4);
 
 var Grid = function Grid(size) {
   _classCallCheck(this, Grid);
@@ -161,20 +162,25 @@ Grid.placeEndpoints = function (grid) {
     i = Math.floor(Math.random() * grid.size);
     j = Math.floor(Math.random() * grid.size);
   }
-  return [i, j];
+  return [i + 1, j + 1];
 };
 
 Grid.makeGrid = function (size) {
-  var grid = [];
+  var nullRow = new Array(size + 2).fill(null);
+  var grid = [nullRow];
   for (var i = 0; i < size; i++) {
-    var row = [];
+    var row = [null];
     for (var j = 0; j < size; j++) {
-      var randBool = Math.random() < 0.3 ? false : true;
-      row.push(randBool);
+      if (Math.random() > 0.25) {
+        row.push(new Node([i, j]));
+      } else {
+        row.push(null);
+      }
     }
+    row.push(null);
     grid.push(row);
   }
-
+  grid.push(nullRow);
   return grid;
 };
 
@@ -187,6 +193,8 @@ module.exports = Grid;
 "use strict";
 
 
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -197,48 +205,56 @@ var BFS = function () {
   function BFS(startPos, goalPos, grid) {
     _classCallCheck(this, BFS);
 
-    this.queue = [new Node(startPos, null, grid)];
+    this.queue = [new Node(startPos)];
     this.visited = {};
     this.goalPos = goalPos;
     this.grid = grid;
   }
 
   _createClass(BFS, [{
-    key: 'traverseGrid',
+    key: "traverseGrid",
     value: function traverseGrid() {
       var _this = this;
 
-      while (this.queue.length > 0) {
-        var current = this.queue.unshift();
-        this.visited[current] = true;
-        if (current.pos === this.goalPos) {
-          this.goalNode = current;
-          break;
+      var _loop = function _loop() {
+        var current = _this.queue.shift();
+        _this.visited[current.pos.join("")] = true;
+        if (current.pos[0] === _this.goalPos[0] && current.pos[1] === _this.goalPos[1]) {
+          return {
+            v: current
+          };
         }
 
-        Node.getNeighbors(current, this.grid).forEach(function (neighbor) {
-          if (!_this.queue.includes(neighbor) && !_this.visited[neighbor]) {
+        current.grid = _this.grid;
+        current.neighbors().forEach(function (neighbor) {
+          if (!_this.queue.includes(neighbor) && !_this.visited[neighbor.pos.join("")]) {
+            neighbor.parent = current;
             _this.queue.push(neighbor);
           }
         });
-      }
-    }
-  }, {
-    key: 'traversePath',
-    value: function traversePath() {
-      var path = [this.goalNode];
-      while (path.slice(-1).parent) {
-        path.push(path.slice(-1).parent);
-      }
+      };
 
-      return path.map(function (node) {
-        return node.pos;
-      });
+      while (this.queue.length > 0) {
+        var _ret = _loop();
+
+        if ((typeof _ret === "undefined" ? "undefined" : _typeof(_ret)) === "object") return _ret.v;
+      }
     }
   }, {
-    key: 'solve',
+    key: "traversePath",
+    value: function traversePath() {
+      var path = [this.traverseGrid()];
+      // while (path.slice(-1)[0].parent) {
+      //   path.push(path.slice(-1)[0].parent);
+      // }
+
+      debugger;
+      return path;
+      // return path.map(node => { return node.pos; });
+    }
+  }, {
+    key: "solve",
     value: function solve() {
-      this.traverseGrid();
       return this.traversePath();
     }
   }]);
@@ -255,38 +271,41 @@ module.exports = BFS;
 "use strict";
 
 
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var Node = function Node(pos, parent, grid) {
-  _classCallCheck(this, Node);
+var Node = function () {
+  function Node(pos) {
+    _classCallCheck(this, Node);
 
-  this.pos = pos;
-  this.parent = parent;
-  // this.neighbors = Node.getNeighbors(parent, grid);
-};
+    this.pos = pos;
+  }
 
-Node.checkDir = function (parent, row, col, grid) {
-  row = parent.pos[0] + row;
-  col = parent.pos[1] + col;
-  return grid.array[row][col] ? new Node([row, col], parent, grid) : null;
-};
+  _createClass(Node, [{
+    key: "neighbors",
+    value: function neighbors() {
+      var north = void 0;var east = void 0;var west = void 0;var south = void 0;
+      if (this.grid.array[this.pos[0] - 1]) {
+        north = this.grid.array[this.pos[0] - 1][this.pos[1]];
+      }
+      if (this.grid.array[this.pos[0] + 1]) {
+        south = this.grid.array[this.pos[0] + 1][this.pos[1]];
+      }
+      east = this.grid.array[this.pos[0]][this.pos[1] + 1];
+      west = this.grid.array[this.pos[0]][this.pos[1] - 1];
 
-Node.getNeighbors = function (parent, grid) {
-  // let north = new Node([parent.pos[0] - 1, parent.pos[1]], parent);
-  // let east = new Node([parent.pos[0], parent.pos[1] + 1], parent);
-  // let south = new Node([parent.pos[0] + 1, parent.pos[1]], parent);
-  // let west = new Node([parent.pos[0], parent.pos[1] - 1], parent);
-  var north = Node.checkDir(parent, -1, 0, grid);
-  var east = Node.checkDir(parent, 0, 1, grid);
-  var south = Node.checkDir(parent, 1, 0, grid);
-  var west = Node.checkDir(parent, 0, -1, grid);
-  var possibleNeighbors = [north, east, south, west];
-  return possibleNeighbors.filter(function (neighbor) {
-    if (neighbor) {
-      return neighbor;
+      var possibleNeighbors = [north, east, south, west];
+      return possibleNeighbors.filter(function (neighbor) {
+        if (neighbor) {
+          return neighbor;
+        }
+      });
     }
-  });
-};
+  }]);
+
+  return Node;
+}();
 
 module.exports = Node;
 

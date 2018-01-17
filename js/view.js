@@ -3,7 +3,7 @@ const Grid = require('./grid.js');
 class View {
   constructor($el) {
     this.$el = $el;
-    this.grid = new Grid(50);
+    this.grid = new Grid(10);
     this.makeGrid();
     this.path = this.grid.bfs.solve();
     console.log(this.path);
@@ -11,9 +11,9 @@ class View {
 
   makeGrid() {
     let html = "";
-    for (let i = 0; i < this.grid.size; i++) {
+    for (let i = 1; i <= this.grid.size; i++) {
       html += "<ul>";
-      for (let j = 0; j < this.grid.size; j++) {
+      for (let j = 1; j <= this.grid.size; j++) {
         if (i === this.grid.startPos[0] && j === this.grid.startPos[1]) {
           html += "<li class=start></li>";
         } else if (i === this.grid.goalPos[0] && j === this.grid.goalPos[1]) {
