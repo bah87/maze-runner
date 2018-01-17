@@ -18,3 +18,6 @@ The algorithms will be implemented in JavaScript, while HTML5 Canvas and CSS wil
 * Day 3 (Friday) - Make sure I have good understanding of HTML5 Canvas going into weekend, implement maze generation (Prim's algorithm)
 * Day 4 (Saturday) - Finish coding traversal algorithms, touch up HTML5 and layout/styling
 * Day 5 (Sunday) - Documentation, documentation, documentation, and more touch up
+
+## Resources
+* https://bost.ocks.org/mike/algorithms/
