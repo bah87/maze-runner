@@ -19,5 +19,8 @@ The algorithms will be implemented in JavaScript, while HTML5 Canvas and CSS wil
 * Day 4 (Saturday) - Finish coding traversal algorithms, touch up HTML5 and layout/styling
 * Day 5 (Sunday) - Documentation, documentation, documentation, and more touch up
 
+## Bonus
+* Sorting algorithm visualization
+
 ## Resources
 * https://bost.ocks.org/mike/algorithms/
