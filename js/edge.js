@@ -3,22 +3,31 @@ class Edge {
     this.vertex1 = vertex1;
     this.vertex2 = vertex2;
     this.weight = Math.random();
-    this.color = "black";
+    this.color = "white";
   }
 
   render(ctx) {
     ctx.fillStyle = this.color;
     const mult = 20;
-    let x1 = this.vertex1.pos[1] * mult;
-    let y1 = this.vertex1.pos[0] * mult;
-    let x2 = this.vertex2.pos[1] * mult;
-    let y2 = this.vertex2.pos[0] * mult;
+    const lineWidth = 10;
+    let x1 = this.vertex1.pos[1] * mult + 25;
+    let x2 = this.vertex2.pos[1] * mult + 25;
+    let y1 = this.vertex1.pos[0] * mult + 25;
+    let y2 = this.vertex2.pos[0] * mult + 25;
+
+    if (x1 === x2 && y1 < y2) {
+      y1 -= lineWidth / 2;
+      y2 += lineWidth / 2;
+    } else if (x1 === x2 && y1 > y2) {
+      y2 -= lineWidth / 2;
+      y1 += lineWidth / 2;
+    }
 
     ctx.beginPath();
     ctx.moveTo(x1, y1);
     ctx.lineTo(x2, y2);
     ctx.strokeStyle = this.color;
-    ctx.lineWidth = 10;
+    ctx.lineWidth = lineWidth;
     ctx.stroke();
   }
 }

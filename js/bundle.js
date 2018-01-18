@@ -128,9 +128,9 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 $(function () {
   var canvasEl = document.getElementsByTagName("canvas")[0];
-  canvasEl.height = window.innerHeight;
-  canvasEl.width = window.innerWidth;
-  new _generate_maze2.default(canvasEl.width, canvasEl.height).start(canvasEl);
+  canvasEl.height = 620;
+  canvasEl.width = 620;
+  new _generate_maze2.default(canvasEl.width, canvasEl.height, 30).start(canvasEl);
 }); // import View from './view';
 //
 // $(() => {
@@ -593,7 +593,7 @@ var Edge = function () {
     this.vertex1 = vertex1;
     this.vertex2 = vertex2;
     this.weight = Math.random();
-    this.color = "black";
+    this.color = "white";
   }
 
   _createClass(Edge, [{
@@ -601,16 +601,25 @@ var Edge = function () {
     value: function render(ctx) {
       ctx.fillStyle = this.color;
       var mult = 20;
-      var x1 = this.vertex1.pos[1] * mult;
-      var y1 = this.vertex1.pos[0] * mult;
-      var x2 = this.vertex2.pos[1] * mult;
-      var y2 = this.vertex2.pos[0] * mult;
+      var lineWidth = 10;
+      var x1 = this.vertex1.pos[1] * mult + 25;
+      var x2 = this.vertex2.pos[1] * mult + 25;
+      var y1 = this.vertex1.pos[0] * mult + 25;
+      var y2 = this.vertex2.pos[0] * mult + 25;
+
+      if (x1 === x2 && y1 < y2) {
+        y1 -= lineWidth / 2;
+        y2 += lineWidth / 2;
+      } else if (x1 === x2 && y1 > y2) {
+        y2 -= lineWidth / 2;
+        y1 += lineWidth / 2;
+      }
 
       ctx.beginPath();
       ctx.moveTo(x1, y1);
       ctx.lineTo(x2, y2);
       ctx.strokeStyle = this.color;
-      ctx.lineWidth = 10;
+      ctx.lineWidth = lineWidth;
       ctx.stroke();
     }
   }]);
@@ -646,12 +655,12 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var GenerateMaze = function () {
-  function GenerateMaze(width, height) {
+  function GenerateMaze(width, height, size) {
     _classCallCheck(this, GenerateMaze);
 
     this.width = width;
     this.height = height;
-    this.grid = new _grid2.default(50);
+    this.grid = new _grid2.default(size);
     this.allEdges = new _prims2.default(this.grid).generate();
     this.edges = [];
   }
@@ -659,7 +668,9 @@ var GenerateMaze = function () {
   _createClass(GenerateMaze, [{
     key: 'render',
     value: function render(ctx) {
-      ctx.clearRect(0, 0, this.width, this.height);
+      ctx.clearRect(10, 10, this.width, this.height);
+      ctx.fillStyle = "black";
+      ctx.fillRect(10, 10, this.width, this.height);
       this.edges.forEach(function (edge) {
         edge.render(ctx);
       });
@@ -673,7 +684,7 @@ var GenerateMaze = function () {
 
       var animateCallback = function animateCallback() {
         if (_this.allEdges.length > 0) {
-          _this.edges.push(_this.allEdges.pop());
+          _this.edges.push(_this.allEdges.shift());
           _this.render(ctx);
           requestAnimationFrame(animateCallback);
         }

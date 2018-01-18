@@ -5,6 +5,12 @@ ul {
   padding: 0;
 }
 
+canvas {
+  margin-left: 20px;
+  margin-top: 20px;
+  padding: 10px;
+}
+
 li {
   width: 20px;
   height: 20px;
