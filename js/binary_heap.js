@@ -11,10 +11,15 @@ class BinaryMaxHeap {
   }
 
   take() {
-    let max = this.pq[1];
-    this.pq[1] = this.pq.pop();
-    this.sink();
-    return max;
+    if (this.pq.length === 2) {
+      return this.pq.pop();
+    }
+    else if (this.pq.length > 2) {
+      let max = this.pq[1];
+      this.pq[1] = this.pq.pop();
+      this.sink();
+      return max;
+    }
   }
 
   bubble() {
