@@ -240,7 +240,7 @@ var Grid = function Grid(size) {
   _classCallCheck(this, Grid);
 
   this.size = size;
-  this.array = Grid.makeGrid(size);
+  this.array = Grid.makeGrid(size, .4);
   this.startPos = Grid.placeEndpoints(this);
   this.goalPos = Grid.placeEndpoints(this);
   this.bfs = new _bfs2.default(this.startPos, this.goalPos, this);
@@ -257,12 +257,12 @@ Grid.placeEndpoints = function (grid) {
   return [i, j];
 };
 
-Grid.makeGrid = function (size) {
+Grid.makeGrid = function (size, random) {
   var grid = [];
   for (var i = 0; i < size; i++) {
     var row = [];
     for (var j = 0; j < size; j++) {
-      if (Math.random() > 0.25) {
+      if (Math.random() > random) {
         row.push(new _node2.default([i, j], i * size + j));
       } else {
         row.push(null);

@@ -5,7 +5,7 @@ import Node from './node';
 class Grid {
   constructor(size) {
     this.size = size;
-    this.array = Grid.makeGrid(size);
+    this.array = Grid.makeGrid(size, .4);
     this.startPos = Grid.placeEndpoints(this);
     this.goalPos = Grid.placeEndpoints(this);
     this.bfs = new BreadthFirstSearch(this.startPos, this.goalPos, this);
@@ -23,12 +23,12 @@ Grid.placeEndpoints = grid => {
   return [i, j];
 };
 
-Grid.makeGrid = size => {
+Grid.makeGrid = (size, random) => {
   let grid = [];
   for (let i = 0; i < size; i++) {
     let row = [];
     for (let j = 0; j < size; j++) {
-      if (Math.random() > 0.25) {
+      if (Math.random() > random) {
         row.push(new Node([i, j], i * size + j));
       } else {
         row.push(null);
