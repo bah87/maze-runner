@@ -5,7 +5,7 @@ import Node from './node';
 class Grid {
   constructor(size) {
     this.size = size;
-    this.array = Grid.makeGrid(size, .4);
+    this.array = Grid.makeGrid(size, -1);
     this.startPos = Grid.placeEndpoints(this);
     this.goalPos = Grid.placeEndpoints(this);
     this.bfs = new BreadthFirstSearch(this.startPos, this.goalPos, this);

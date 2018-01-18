@@ -240,7 +240,7 @@ var Grid = function Grid(size) {
   _classCallCheck(this, Grid);
 
   this.size = size;
-  this.array = Grid.makeGrid(size, .4);
+  this.array = Grid.makeGrid(size, -1);
   this.startPos = Grid.placeEndpoints(this);
   this.goalPos = Grid.placeEndpoints(this);
   this.bfs = new _bfs2.default(this.startPos, this.goalPos, this);
