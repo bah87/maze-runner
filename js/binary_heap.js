@@ -5,7 +5,9 @@ class BinaryMaxHeap {
 
   put(edge) {
     this.pq.push(edge);
-    this.bubble();
+    if (this.pq.length > 2) {
+      this.bubble();
+    }
   }
 
   take() {
@@ -56,3 +58,5 @@ class BinaryMaxHeap {
     }
   }
 }
+
+export default BinaryMaxHeap;
