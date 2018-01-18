@@ -121,7 +121,7 @@ exports.default = Node;
 "use strict";
 
 
-var _generate_maze = __webpack_require__(9);
+var _generate_maze = __webpack_require__(2);
 
 var _generate_maze2 = _interopRequireDefault(_generate_maze);
 
@@ -135,7 +135,116 @@ $(function () {
 });
 
 /***/ }),
-/* 2 */,
+/* 2 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _grid = __webpack_require__(3);
+
+var _grid2 = _interopRequireDefault(_grid);
+
+var _prims = __webpack_require__(4);
+
+var _prims2 = _interopRequireDefault(_prims);
+
+var _bfs = __webpack_require__(7);
+
+var _bfs2 = _interopRequireDefault(_bfs);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var GenerateMaze = function () {
+  function GenerateMaze(width, height, size) {
+    _classCallCheck(this, GenerateMaze);
+
+    this.width = width;
+    this.height = height;
+    this.grid = new _grid2.default(size);
+    this.allEdges = new _prims2.default(this.grid).generate();
+    this.startPos = this.grid.startPos;
+    this.goalPos = this.grid.goalPos;
+    this.bfs = new _bfs2.default(this.startPos, this.goalPos, this.grid);
+    this.path = this.bfs.solve();
+    this.edges = [];
+  }
+
+  _createClass(GenerateMaze, [{
+    key: 'render',
+    value: function render(ctx) {
+      ctx.clearRect(10, 10, this.width, this.height);
+      ctx.fillStyle = "black";
+      ctx.fillRect(10, 10, this.width, this.height);
+      this.edges.forEach(function (edge) {
+        edge.render(ctx, "white");
+      });
+    }
+  }, {
+    key: 'renderEndpoints',
+    value: function renderEndpoints(ctx) {
+      ctx.fillStyle = "green";
+      var startX = this.startPos[1] * 20 + 20;
+      var startY = this.startPos[0] * 20 + 20;
+      ctx.fillRect(startX, startY, 10, 10);
+
+      ctx.fillStyle = "red";
+      var goalX = this.goalPos[1] * 20 + 20;
+      var goalY = this.goalPos[0] * 20 + 20;
+      ctx.fillRect(goalX, goalY, 10, 10);
+    }
+  }, {
+    key: 'start',
+    value: function start(canvasEl) {
+      var _this = this;
+
+      var ctx = canvasEl.getContext("2d");
+
+      var animateCallback = function animateCallback() {
+        if (_this.allEdges.length > 0) {
+          _this.edges.push(_this.allEdges.shift());
+          _this.render(ctx);
+          requestAnimationFrame(animateCallback);
+          _this.renderEndpoints(ctx);
+        }
+      };
+
+      animateCallback();
+    }
+  }, {
+    key: 'solve',
+    value: function solve(canvasEl) {
+      var _this2 = this;
+
+      var ctx = canvasEl.getContext("2d");
+      var pathEdges = [];
+
+      var animateCallback = function animateCallback() {
+        if (_this2.path.length > 0) {
+          pathEdges.push(_this2.path.pop());
+          // this.render(ctx);
+          requestAnimationFrame(animateCallback);
+        }
+      };
+
+      animateCallback();
+    }
+  }]);
+
+  return GenerateMaze;
+}();
+
+exports.default = GenerateMaze;
+
+/***/ }),
 /* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -198,98 +307,13 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _node = __webpack_require__(0);
-
-var _node2 = _interopRequireDefault(_node);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var BreadthFirstSearch = function () {
-  function BreadthFirstSearch(startPos, goalPos, grid) {
-    _classCallCheck(this, BreadthFirstSearch);
-
-    this.queue = [grid.array[startPos[0]][startPos[1]]];
-    this.visited = {};
-    this.goalValue = goalPos[0] * grid.size + goalPos[1];
-  }
-
-  _createClass(BreadthFirstSearch, [{
-    key: 'traverseGrid',
-    value: function traverseGrid() {
-      var _this = this;
-
-      var _loop = function _loop() {
-        var current = _this.queue.shift();
-        _this.visited[current.value] = true;
-        if (current.value === _this.goalValue) {
-          return {
-            v: current
-          };
-        }
-
-        current.edgeNeighbors.forEach(function (neighbor) {
-          if (!_this.queue.includes(neighbor) && !_this.visited[neighbor.value]) {
-            neighbor.parent = current;
-            _this.queue.push(neighbor);
-          }
-        });
-      };
-
-      while (this.queue.length > 0) {
-        var _ret = _loop();
-
-        if ((typeof _ret === 'undefined' ? 'undefined' : _typeof(_ret)) === "object") return _ret.v;
-      }
-    }
-  }, {
-    key: 'traversePath',
-    value: function traversePath() {
-      var path = [this.traverseGrid()];
-      while (path.slice(-1)[0].parent) {
-        path.push(path.slice(-1)[0].parent);
-      }
-
-      return path.map(function (node) {
-        return node.value;
-      });
-    }
-  }, {
-    key: 'solve',
-    value: function solve() {
-      return this.traversePath();
-    }
-  }]);
-
-  return BreadthFirstSearch;
-}();
-
-exports.default = BreadthFirstSearch;
-
-/***/ }),
-/* 5 */,
-/* 6 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _binary_heap = __webpack_require__(7);
+var _binary_heap = __webpack_require__(5);
 
 var _binary_heap2 = _interopRequireDefault(_binary_heap);
 
-var _edge = __webpack_require__(8);
+var _edge = __webpack_require__(6);
 
 var _edge2 = _interopRequireDefault(_edge);
 
@@ -359,7 +383,7 @@ var Prims = function () {
 exports.default = Prims;
 
 /***/ }),
-/* 7 */
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -463,7 +487,7 @@ var BinaryMinHeap = function () {
 exports.default = BinaryMinHeap;
 
 /***/ }),
-/* 8 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -484,7 +508,6 @@ var Edge = function () {
     this.vertex1 = vertex1;
     this.vertex2 = vertex2;
     this.weight = Math.random();
-    this.color = "white";
 
     // Whenever edge gets created, make 2 vertices neighbors
     if (!vertex1.edgeNeighbors.includes(vertex2)) {
@@ -497,8 +520,7 @@ var Edge = function () {
 
   _createClass(Edge, [{
     key: "render",
-    value: function render(ctx) {
-      ctx.fillStyle = this.color;
+    value: function render(ctx, color) {
       var mult = 20;
       var lineWidth = 10;
       var x1 = this.vertex1.pos[1] * mult + 25;
@@ -523,7 +545,7 @@ var Edge = function () {
       ctx.beginPath();
       ctx.moveTo(x1, y1);
       ctx.lineTo(x2, y2);
-      ctx.strokeStyle = this.color;
+      ctx.strokeStyle = color;
       ctx.lineWidth = lineWidth;
       ctx.stroke();
     }
@@ -535,7 +557,7 @@ var Edge = function () {
 exports.default = Edge;
 
 /***/ }),
-/* 9 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -545,72 +567,78 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _grid = __webpack_require__(3);
+var _node = __webpack_require__(0);
 
-var _grid2 = _interopRequireDefault(_grid);
-
-var _prims = __webpack_require__(6);
-
-var _prims2 = _interopRequireDefault(_prims);
-
-var _bfs = __webpack_require__(4);
-
-var _bfs2 = _interopRequireDefault(_bfs);
+var _node2 = _interopRequireDefault(_node);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var GenerateMaze = function () {
-  function GenerateMaze(width, height, size) {
-    _classCallCheck(this, GenerateMaze);
+var BreadthFirstSearch = function () {
+  function BreadthFirstSearch(startPos, goalPos, grid) {
+    _classCallCheck(this, BreadthFirstSearch);
 
-    this.width = width;
-    this.height = height;
-    this.grid = new _grid2.default(size);
-    this.allEdges = new _prims2.default(this.grid).generate();
-    var start = this.grid.startPos;
-    var goal = this.grid.goalPos;
-    this.bfs = new _bfs2.default(start, goal, this.grid);
-    this.path = this.bfs.solve();
-    this.edges = [];
+    this.queue = [grid.array[startPos[0]][startPos[1]]];
+    this.visited = {};
+    this.goalValue = goalPos[0] * grid.size + goalPos[1];
   }
 
-  _createClass(GenerateMaze, [{
-    key: 'render',
-    value: function render(ctx) {
-      ctx.clearRect(10, 10, this.width, this.height);
-      ctx.fillStyle = "black";
-      ctx.fillRect(10, 10, this.width, this.height);
-      this.edges.forEach(function (edge) {
-        edge.render(ctx);
+  _createClass(BreadthFirstSearch, [{
+    key: 'traverseGrid',
+    value: function traverseGrid() {
+      var _this = this;
+
+      var _loop = function _loop() {
+        var current = _this.queue.shift();
+        _this.visited[current.value] = true;
+        if (current.value === _this.goalValue) {
+          return {
+            v: current
+          };
+        }
+
+        current.edgeNeighbors.forEach(function (neighbor) {
+          if (!_this.queue.includes(neighbor) && !_this.visited[neighbor.value]) {
+            neighbor.parent = current;
+            _this.queue.push(neighbor);
+          }
+        });
+      };
+
+      while (this.queue.length > 0) {
+        var _ret = _loop();
+
+        if ((typeof _ret === 'undefined' ? 'undefined' : _typeof(_ret)) === "object") return _ret.v;
+      }
+    }
+  }, {
+    key: 'traversePath',
+    value: function traversePath() {
+      var path = [this.traverseGrid()];
+      while (path.slice(-1)[0].parent) {
+        path.push(path.slice(-1)[0].parent);
+      }
+
+      return path.map(function (node) {
+        return node.value;
       });
     }
   }, {
-    key: 'start',
-    value: function start(canvasEl) {
-      var _this = this;
-
-      var ctx = canvasEl.getContext("2d");
-
-      var animateCallback = function animateCallback() {
-        if (_this.allEdges.length > 0) {
-          _this.edges.push(_this.allEdges.shift());
-          _this.render(ctx);
-          requestAnimationFrame(animateCallback);
-        }
-      };
-
-      animateCallback();
+    key: 'solve',
+    value: function solve() {
+      return this.traversePath();
     }
   }]);
 
-  return GenerateMaze;
+  return BreadthFirstSearch;
 }();
 
-exports.default = GenerateMaze;
+exports.default = BreadthFirstSearch;
 
 /***/ })
 /******/ ]);

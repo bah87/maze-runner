@@ -8,9 +8,9 @@ class GenerateMaze {
     this.height = height;
     this.grid = new Grid(size);
     this.allEdges = new Prims(this.grid).generate();
-    let start = this.grid.startPos;
-    let goal = this.grid.goalPos;
-    this.bfs = new BreadthFirstSearch(start, goal, this.grid);
+    this.startPos = this.grid.startPos;
+    this.goalPos = this.grid.goalPos;
+    this.bfs = new BreadthFirstSearch(this.startPos, this.goalPos, this.grid);
     this.path = this.bfs.solve();
     this.edges = [];
   }
@@ -20,8 +20,20 @@ class GenerateMaze {
     ctx.fillStyle = "black";
     ctx.fillRect(10, 10, this.width, this.height);
     this.edges.forEach(edge => {
-      edge.render(ctx);
+      edge.render(ctx, "white");
     });
+  }
+
+  renderEndpoints(ctx) {
+    ctx.fillStyle = "green";
+    let startX = this.startPos[1] * 20 + 20;
+    let startY = this.startPos[0] * 20 + 20;
+    ctx.fillRect(startX, startY, 10, 10);
+
+    ctx.fillStyle = "red";
+    let goalX = this.goalPos[1] * 20 + 20;
+    let goalY = this.goalPos[0] * 20 + 20;
+    ctx.fillRect(goalX, goalY, 10, 10);
   }
 
   start(canvasEl) {
@@ -31,6 +43,22 @@ class GenerateMaze {
       if (this.allEdges.length > 0) {
         this.edges.push(this.allEdges.shift());
         this.render(ctx);
+        requestAnimationFrame(animateCallback);
+        this.renderEndpoints(ctx);
+      }
+    };
+
+    animateCallback();
+  }
+
+  solve(canvasEl) {
+    const ctx = canvasEl.getContext("2d");
+    const pathEdges = [];
+
+    const animateCallback = () => {
+      if (this.path.length > 0) {
+        pathEdges.push(this.path.pop());
+        // this.render(ctx);
         requestAnimationFrame(animateCallback);
       }
     };

@@ -3,7 +3,6 @@ class Edge {
     this.vertex1 = vertex1;
     this.vertex2 = vertex2;
     this.weight = Math.random();
-    this.color = "white";
 
     // Whenever edge gets created, make 2 vertices neighbors
     if (!vertex1.edgeNeighbors.includes(vertex2)) {
@@ -14,8 +13,7 @@ class Edge {
     }
   }
 
-  render(ctx) {
-    ctx.fillStyle = this.color;
+  render(ctx, color) {
     const mult = 20;
     const lineWidth = 10;
     let x1 = this.vertex1.pos[1] * mult + 25;
@@ -40,7 +38,7 @@ class Edge {
     ctx.beginPath();
     ctx.moveTo(x1, y1);
     ctx.lineTo(x2, y2);
-    ctx.strokeStyle = this.color;
+    ctx.strokeStyle = color;
     ctx.lineWidth = lineWidth;
     ctx.stroke();
   }
