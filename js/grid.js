@@ -1,5 +1,3 @@
-import BreadthFirstSearch from './bfs';
-import DepthFirstSearch from './dfs';
 import Node from './node';
 
 class Grid {
@@ -8,18 +6,12 @@ class Grid {
     this.array = Grid.makeGrid(size, -1);
     this.startPos = Grid.placeEndpoints(this);
     this.goalPos = Grid.placeEndpoints(this);
-    this.bfs = new BreadthFirstSearch(this.startPos, this.goalPos, this);
-    this.dfs = new DepthFirstSearch(this.startPos, this.goalPos, this);
   }
 }
 
 Grid.placeEndpoints = grid => {
   let i = Math.floor(Math.random() * grid.size);
   let j = Math.floor(Math.random() * grid.size);
-  while (!grid.array[i][j]) {
-    i = Math.floor(Math.random() * grid.size);
-    j = Math.floor(Math.random() * grid.size);
-  }
   return [i, j];
 };
 

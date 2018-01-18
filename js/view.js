@@ -13,7 +13,6 @@ class View {
       this.path = this.grid.bfs.solve();
     } else if (algo === "Prims") {
       this.edges = new Prims(this.grid).generate();
-      debugger
     }
   }
 

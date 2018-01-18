@@ -2,22 +2,20 @@ import Node from './node';
 
 class BreadthFirstSearch {
   constructor(startPos, goalPos, grid) {
-    this.queue = [new Node(startPos, startPos[0] * grid.size + startPos[1])];
+    this.queue = [grid.array[startPos[0]][startPos[1]]];
     this.visited = {};
-    this.goalNode = new Node(goalPos, goalPos[0] * grid.size + goalPos[1]);
-    this.grid = grid;
+    this.goalValue = goalPos[0] * grid.size + goalPos[1];
   }
 
   traverseGrid() {
     while (this.queue.length > 0) {
       let current = this.queue.shift();
       this.visited[current.value] = true;
-      if (current.value === this.goalNode.value) {
+      if (current.value === this.goalValue) {
         return current;
       }
 
-      current.grid = this.grid;
-      current.neighbors().forEach(neighbor => {
+      current.edgeNeighbors.forEach(neighbor => {
         if (!this.queue.includes(neighbor) && !this.visited[neighbor.value]) {
           neighbor.parent = current;
           this.queue.push(neighbor);

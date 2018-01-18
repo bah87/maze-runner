@@ -1,5 +1,6 @@
 import Grid from './grid';
 import Prims from './prims';
+import BreadthFirstSearch from './bfs';
 
 class GenerateMaze {
   constructor(width, height, size) {
@@ -7,6 +8,10 @@ class GenerateMaze {
     this.height = height;
     this.grid = new Grid(size);
     this.allEdges = new Prims(this.grid).generate();
+    let start = this.grid.startPos;
+    let goal = this.grid.goalPos;
+    this.bfs = new BreadthFirstSearch(start, goal, this.grid);
+    this.path = this.bfs.solve();
     this.edges = [];
   }
 
