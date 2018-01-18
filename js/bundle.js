@@ -70,6 +70,10 @@
 "use strict";
 
 
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -107,7 +111,7 @@ var Node = function () {
   return Node;
 }();
 
-module.exports = Node;
+exports.default = Node;
 
 /***/ }),
 /* 1 */
@@ -116,12 +120,19 @@ module.exports = Node;
 "use strict";
 
 
-var View = __webpack_require__(2);
+var _view = __webpack_require__(2);
+
+var _view2 = _interopRequireDefault(_view);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 $(function () {
-  var rootEl = $('.maze-viz');
-  var view = new View(rootEl);
-  view.render();
+  var mazeOne = $('.maze-viz-1');
+  var mazeTwo = $('.maze-viz-2');
+  var viewOne = new _view2.default(mazeOne, "BFS");
+  var viewTwo = new _view2.default(mazeTwo, "DFS");
+  viewOne.render();
+  viewTwo.render();
 });
 
 /***/ }),
@@ -131,20 +142,33 @@ $(function () {
 "use strict";
 
 
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _grid = __webpack_require__(3);
+
+var _grid2 = _interopRequireDefault(_grid);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var Grid = __webpack_require__(3);
-
 var View = function () {
-  function View($el) {
+  function View($el, algo) {
     _classCallCheck(this, View);
 
     this.$el = $el;
-    this.grid = new Grid(25);
-    this.path = this.grid.bfs.solve();
-    console.log(this.path);
+    this.grid = new _grid2.default(25);
+    if (algo === "DFS") {
+      this.visited = Object.keys(this.grid.dfs.visited);
+      this.path = this.grid.dfs.solve();
+    } else if (algo === "BFS") {
+      this.visited = Object.keys(this.grid.bfs.visited);
+      this.path = this.grid.bfs.solve();
+    }
   }
 
   _createClass(View, [{
@@ -160,6 +184,8 @@ var View = function () {
             html += "<li class=goal></li>";
           } else if (this.path.includes(i * this.grid.size + j)) {
             html += "<li class=path></li>";
+          } else if (this.visited.includes(i * this.grid.size + j)) {
+            html += "<li class=visited></li>";
           } else if (this.grid.array[i][j]) {
             html += "<li class=empty></li>";
           } else {
@@ -181,7 +207,7 @@ var View = function () {
   return View;
 }();
 
-module.exports = View;
+exports.default = View;
 
 /***/ }),
 /* 3 */
@@ -190,10 +216,25 @@ module.exports = View;
 "use strict";
 
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
 
-var BFS = __webpack_require__(4);
-var Node = __webpack_require__(0);
+var _bfs = __webpack_require__(4);
+
+var _bfs2 = _interopRequireDefault(_bfs);
+
+var _dfs = __webpack_require__(5);
+
+var _dfs2 = _interopRequireDefault(_dfs);
+
+var _node = __webpack_require__(0);
+
+var _node2 = _interopRequireDefault(_node);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var Grid = function Grid(size) {
   _classCallCheck(this, Grid);
@@ -202,7 +243,8 @@ var Grid = function Grid(size) {
   this.array = Grid.makeGrid(size);
   this.startPos = Grid.placeEndpoints(this);
   this.goalPos = Grid.placeEndpoints(this);
-  this.bfs = new BFS(this.startPos, this.goalPos, this);
+  this.bfs = new _bfs2.default(this.startPos, this.goalPos, this);
+  this.dfs = new _dfs2.default(this.startPos, this.goalPos, this);
 };
 
 Grid.placeEndpoints = function (grid) {
@@ -221,7 +263,7 @@ Grid.makeGrid = function (size) {
     var row = [];
     for (var j = 0; j < size; j++) {
       if (Math.random() > 0.25) {
-        row.push(new Node([i, j], i * size + j));
+        row.push(new _node2.default([i, j], i * size + j));
       } else {
         row.push(null);
       }
@@ -231,7 +273,7 @@ Grid.makeGrid = function (size) {
   return grid;
 };
 
-module.exports = Grid;
+exports.default = Grid;
 
 /***/ }),
 /* 4 */
@@ -240,25 +282,33 @@ module.exports = Grid;
 "use strict";
 
 
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
+var _node = __webpack_require__(0);
+
+var _node2 = _interopRequireDefault(_node);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var Node = __webpack_require__(0);
+var BreadthFirstSearch = function () {
+  function BreadthFirstSearch(startPos, goalPos, grid) {
+    _classCallCheck(this, BreadthFirstSearch);
 
-var BFS = function () {
-  function BFS(startPos, goalPos, grid) {
-    _classCallCheck(this, BFS);
-
-    this.queue = [new Node(startPos, startPos[0] * grid.size + startPos[1])];
+    this.queue = [new _node2.default(startPos, startPos[0] * grid.size + startPos[1])];
     this.visited = {};
-    this.goalNode = new Node(goalPos, goalPos[0] * grid.size + goalPos[1]);
+    this.goalNode = new _node2.default(goalPos, goalPos[0] * grid.size + goalPos[1]);
     this.grid = grid;
   }
 
-  _createClass(BFS, [{
+  _createClass(BreadthFirstSearch, [{
     key: 'traverseGrid',
     value: function traverseGrid() {
       var _this = this;
@@ -306,10 +356,96 @@ var BFS = function () {
     }
   }]);
 
-  return BFS;
+  return BreadthFirstSearch;
 }();
 
-module.exports = BFS;
+exports.default = BreadthFirstSearch;
+
+/***/ }),
+/* 5 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _node = __webpack_require__(0);
+
+var _node2 = _interopRequireDefault(_node);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var DepthFirstSearch = function () {
+  function DepthFirstSearch(startPos, goalPos, grid) {
+    _classCallCheck(this, DepthFirstSearch);
+
+    this.stack = [new _node2.default(startPos, startPos[0] * grid.size + startPos[1])];
+    this.visited = {};
+    this.goalNode = new _node2.default(goalPos, goalPos[0] * grid.size + goalPos[1]);
+    this.grid = grid;
+  }
+
+  _createClass(DepthFirstSearch, [{
+    key: 'traverseGrid',
+    value: function traverseGrid() {
+      var _this = this;
+
+      var _loop = function _loop() {
+        var current = _this.stack.pop();
+        _this.visited[current.value] = true;
+        if (current.value === _this.goalNode.value) {
+          return {
+            v: current
+          };
+        }
+
+        current.grid = _this.grid;
+        current.neighbors().reverse().forEach(function (neighbor) {
+          if (!_this.stack.includes(neighbor) && !_this.visited[neighbor.value]) {
+            neighbor.parent = current;
+            _this.stack.push(neighbor);
+          }
+        });
+      };
+
+      while (this.stack.length > 0) {
+        var _ret = _loop();
+
+        if ((typeof _ret === 'undefined' ? 'undefined' : _typeof(_ret)) === "object") return _ret.v;
+      }
+    }
+  }, {
+    key: 'traversePath',
+    value: function traversePath() {
+      var path = [this.traverseGrid()];
+      while (path.slice(-1)[0].parent) {
+        path.push(path.slice(-1)[0].parent);
+      }
+
+      return path.map(function (node) {
+        return node.value;
+      });
+    }
+  }, {
+    key: 'solve',
+    value: function solve() {
+      return this.traversePath();
+    }
+  }]);
+
+  return DepthFirstSearch;
+}();
+
+exports.default = DepthFirstSearch;
 
 /***/ })
 /******/ ]);

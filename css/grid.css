@@ -16,6 +16,10 @@ li {
   background-color: orange;
 }
 
+.visited {
+  background-color: blue;
+}
+
 .start {
   background-color: green;
 }
@@ -28,7 +32,11 @@ li {
   background-color: black;
 }
 
-.maze-viz {
+.figure-container {
+  display: flex;
+}
+
+figure {
   width: 500px;
   height: 500px;
   border: 1px solid black;

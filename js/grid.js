@@ -1,5 +1,6 @@
-const BFS = require('./bfs.js');
-const Node = require('./node.js');
+import BreadthFirstSearch from './bfs';
+import DepthFirstSearch from './dfs';
+import Node from './node';
 
 class Grid {
   constructor(size) {
@@ -7,7 +8,8 @@ class Grid {
     this.array = Grid.makeGrid(size);
     this.startPos = Grid.placeEndpoints(this);
     this.goalPos = Grid.placeEndpoints(this);
-    this.bfs = new BFS(this.startPos, this.goalPos, this);
+    this.bfs = new BreadthFirstSearch(this.startPos, this.goalPos, this);
+    this.dfs = new DepthFirstSearch(this.startPos, this.goalPos, this);
   }
 }
 
@@ -37,4 +39,4 @@ Grid.makeGrid = size => {
   return grid;
 };
 
-module.exports = Grid;
+export default Grid;

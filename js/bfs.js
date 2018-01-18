@@ -1,6 +1,6 @@
-const Node = require('./node.js');
+import Node from './node';
 
-class BFS {
+class BreadthFirstSearch {
   constructor(startPos, goalPos, grid) {
     this.queue = [new Node(startPos, startPos[0] * grid.size + startPos[1])];
     this.visited = {};
@@ -40,4 +40,4 @@ class BFS {
   }
 }
 
-module.exports = BFS;
+export default BreadthFirstSearch;

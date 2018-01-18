@@ -1,11 +1,16 @@
-const Grid = require('./grid.js');
+import Grid from './grid';
 
 class View {
-  constructor($el) {
+  constructor($el, algo) {
     this.$el = $el;
     this.grid = new Grid(25);
-    this.path = this.grid.bfs.solve();
-    console.log(this.path);
+    if (algo === "DFS") {
+      this.visited = Object.keys(this.grid.dfs.visited);
+      this.path = this.grid.dfs.solve();
+    } else if (algo === "BFS") {
+      this.visited = Object.keys(this.grid.bfs.visited);
+      this.path = this.grid.bfs.solve();
+    }
   }
 
   makeGrid() {
@@ -19,6 +24,8 @@ class View {
           html += `<li class=goal></li>`;
         } else if (this.path.includes(i * this.grid.size + j)) {
           html += `<li class=path></li>`;
+        } else if (this.visited.includes(i * this.grid.size + j)) {
+          html += `<li class=visited></li>`;
         } else if (this.grid.array[i][j]) {
           html += `<li class=empty></li>`;
         } else {
@@ -36,4 +43,4 @@ class View {
   }
 }
 
-module.exports = View;
+export default View;
