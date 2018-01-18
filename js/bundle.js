@@ -128,11 +128,11 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 $(function () {
   var mazeOne = $('.maze-viz-1');
-  var mazeTwo = $('.maze-viz-2');
-  var viewOne = new _view2.default(mazeOne, "BFS");
-  var viewTwo = new _view2.default(mazeTwo, "DFS");
+  // const mazeTwo = $('.maze-viz-2');
+  var viewOne = new _view2.default(mazeOne, "Prims");
+  // const viewTwo = new View(mazeTwo, "DFS");
   viewOne.render();
-  viewTwo.render();
+  // viewTwo.render();
 });
 
 /***/ }),
@@ -152,6 +152,10 @@ var _grid = __webpack_require__(3);
 
 var _grid2 = _interopRequireDefault(_grid);
 
+var _prims = __webpack_require__(6);
+
+var _prims2 = _interopRequireDefault(_prims);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -161,35 +165,38 @@ var View = function () {
     _classCallCheck(this, View);
 
     this.$el = $el;
-    this.grid = new _grid2.default(25);
+    this.grid = new _grid2.default(5);
     if (algo === "DFS") {
       this.visited = Object.keys(this.grid.dfs.visited);
       this.path = this.grid.dfs.solve();
     } else if (algo === "BFS") {
       this.visited = Object.keys(this.grid.bfs.visited);
       this.path = this.grid.bfs.solve();
+    } else if (algo === "Prims") {
+      this.edges = new _prims2.default(this.grid).generate();
+      debugger;
     }
   }
 
   _createClass(View, [{
-    key: "makeGrid",
+    key: 'makeGrid',
     value: function makeGrid() {
       var html = "";
       for (var i = 0; i < this.grid.size; i++) {
         html += "<ul>";
         for (var j = 0; j < this.grid.size; j++) {
           if (i === this.grid.startPos[0] && j === this.grid.startPos[1]) {
-            html += "<li class=start></li>";
+            html += '<li class=start></li>';
           } else if (i === this.grid.goalPos[0] && j === this.grid.goalPos[1]) {
-            html += "<li class=goal></li>";
+            html += '<li class=goal></li>';
           } else if (this.path.includes(i * this.grid.size + j)) {
-            html += "<li class=path></li>";
+            html += '<li class=path></li>';
           } else if (this.visited.includes(i * this.grid.size + j)) {
-            html += "<li class=visited></li>";
+            html += '<li class=visited></li>';
           } else if (this.grid.array[i][j]) {
-            html += "<li class=empty></li>";
+            html += '<li class=empty></li>';
           } else {
-            html += "<li class=wall></li>";
+            html += '<li class=wall></li>';
           }
         }
         html += "</ul>";
@@ -198,7 +205,7 @@ var View = function () {
       this.$el.html(html);
     }
   }, {
-    key: "render",
+    key: 'render',
     value: function render() {
       this.makeGrid();
     }
@@ -446,6 +453,219 @@ var DepthFirstSearch = function () {
 }();
 
 exports.default = DepthFirstSearch;
+
+/***/ }),
+/* 6 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _binary_heap = __webpack_require__(7);
+
+var _binary_heap2 = _interopRequireDefault(_binary_heap);
+
+var _edge = __webpack_require__(8);
+
+var _edge2 = _interopRequireDefault(_edge);
+
+var _node = __webpack_require__(0);
+
+var _node2 = _interopRequireDefault(_node);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Prims = function () {
+  function Prims(grid) {
+    _classCallCheck(this, Prims);
+
+    this.pq = new _binary_heap2.default();
+    this.grid = grid;
+    this.boolean = {
+      length: 0,
+      array: new Array(Math.pow(this.grid.size, 2)).fill(false)
+    };
+    this.edges = [];
+  }
+
+  _createClass(Prims, [{
+    key: 'generate',
+    value: function generate() {
+      var _this = this;
+
+      var start = new _node2.default([0, 0], 0);
+      start.grid = this.grid;
+      this.boolean[start.value] = true;
+      this.boolean.length++;
+      start.neighbors().forEach(function (neighbor) {
+        _this.pq.put(new _edge2.default(start, neighbor));
+      });
+
+      var _loop = function _loop() {
+        var cheapestEdge = _this.pq.take();
+        if (!_this.boolean[cheapestEdge.vertex2.value]) {
+          cheapestEdge.vertex2.grid = _this.grid;
+          _this.boolean[cheapestEdge.vertex2.value] = true;
+          _this.boolean.length++;
+          _this.edges.push(cheapestEdge);
+          cheapestEdge.vertex2.neighbors().forEach(function (neighbor) {
+            _this.pq.put(new _edge2.default(cheapestEdge.vertex2, neighbor));
+          });
+        }
+      };
+
+      while (!this.treeFull()) {
+        _loop();
+      }
+
+      return this.edges;
+    }
+  }, {
+    key: 'treeFull',
+    value: function treeFull() {
+      return this.boolean.length === this.boolean.array.length;
+    }
+  }]);
+
+  return Prims;
+}();
+
+exports.default = Prims;
+
+/***/ }),
+/* 7 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var BinaryMinHeap = function () {
+  function BinaryMinHeap() {
+    _classCallCheck(this, BinaryMinHeap);
+
+    this.pq = [null];
+  }
+
+  _createClass(BinaryMinHeap, [{
+    key: "put",
+    value: function put(edge) {
+      this.pq.push(edge);
+      if (this.pq.length > 2) {
+        this.bubble();
+      }
+    }
+  }, {
+    key: "take",
+    value: function take() {
+      if (this.pq.length === 2) {
+        return this.pq.pop();
+      } else if (this.pq.length > 2) {
+        var min = this.pq[1];
+        this.pq[1] = this.pq.pop();
+        this.sink();
+        return min;
+      }
+    }
+  }, {
+    key: "bubble",
+    value: function bubble() {
+      var newIdx = this.pq.length - 1;
+      var parentIdx = Math.floor(newIdx / 2);
+      while (this.pq[newIdx].weight < this.pq[parentIdx].weight) {
+        var _ref = [this.pq[parentIdx], this.pq[newIdx]];
+        this.pq[newIdx] = _ref[0];
+        this.pq[parentIdx] = _ref[1];
+
+        newIdx = parentIdx;
+        if (newIdx === 1) {
+          break;
+        }
+        parentIdx = Math.floor(newIdx / 2);
+      }
+    }
+  }, {
+    key: "sink",
+    value: function sink() {
+      var idx = 1;
+      var c1 = 2;
+      var c2 = 3;
+
+      while (this.pq[c1]) {
+        if (this.pq[c2]) {
+          if (this.pq[c2].weight < this.pq[c1].weight && this.pq[c2].weight < this.pq[idx].weight) {
+            var _ref2 = [this.pq[idx], this.pq[c2]];
+            this.pq[c2] = _ref2[0];
+            this.pq[idx] = _ref2[1];
+
+            idx = c2;
+          } else if (this.pq[c1].weight < this.pq[idx].weight) {
+            var _ref3 = [this.pq[idx], this.pq[c1]];
+            this.pq[c1] = _ref3[0];
+            this.pq[idx] = _ref3[1];
+
+            idx = c1;
+          } else {
+            break;
+          }
+        } else if (this.pq[c1].weight < this.pq[idx].weight) {
+          var _ref4 = [this.pq[idx], this.pq[c1]];
+          this.pq[c1] = _ref4[0];
+          this.pq[idx] = _ref4[1];
+
+          idx = c1;
+        } else {
+          break;
+        }
+
+        c1 = idx * 2;
+        c2 = idx * 2 + 1;
+      }
+    }
+  }]);
+
+  return BinaryMinHeap;
+}();
+
+exports.default = BinaryMinHeap;
+
+/***/ }),
+/* 8 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Edge = function Edge(vertex1, vertex2) {
+  _classCallCheck(this, Edge);
+
+  this.vertex1 = vertex1;
+  this.vertex2 = vertex2;
+  this.weight = Math.random();
+};
+
+exports.default = Edge;
 
 /***/ })
 /******/ ]);

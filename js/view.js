@@ -1,15 +1,19 @@
 import Grid from './grid';
+import Prims from './prims';
 
 class View {
   constructor($el, algo) {
     this.$el = $el;
-    this.grid = new Grid(25);
+    this.grid = new Grid(5);
     if (algo === "DFS") {
       this.visited = Object.keys(this.grid.dfs.visited);
       this.path = this.grid.dfs.solve();
     } else if (algo === "BFS") {
       this.visited = Object.keys(this.grid.bfs.visited);
       this.path = this.grid.bfs.solve();
+    } else if (algo === "Prims") {
+      this.edges = new Prims(this.grid).generate();
+      debugger
     }
   }
 

@@ -1,4 +1,4 @@
-class BinaryMaxHeap {
+class BinaryMinHeap {
   constructor() {
     this.pq = [null];
   }
@@ -15,17 +15,17 @@ class BinaryMaxHeap {
       return this.pq.pop();
     }
     else if (this.pq.length > 2) {
-      let max = this.pq[1];
+      let min = this.pq[1];
       this.pq[1] = this.pq.pop();
       this.sink();
-      return max;
+      return min;
     }
   }
 
   bubble() {
     let newIdx = this.pq.length - 1;
     let parentIdx = Math.floor(newIdx/2);
-    while (this.pq[newIdx].weight > this.pq[parentIdx].weight) {
+    while (this.pq[newIdx].weight < this.pq[parentIdx].weight) {
       [this.pq[newIdx], this.pq[parentIdx]] =
         [this.pq[parentIdx], this.pq[newIdx]];
       newIdx = parentIdx;
@@ -41,17 +41,17 @@ class BinaryMaxHeap {
 
     while (this.pq[c1]) {
       if (this.pq[c2]) {
-        if (this.pq[c2].weight > this.pq[c1].weight &&
-            this.pq[c2].weight > this.pq[idx].weight) {
+        if (this.pq[c2].weight < this.pq[c1].weight &&
+            this.pq[c2].weight < this.pq[idx].weight) {
           [this.pq[c2], this.pq[idx]] = [this.pq[idx], this.pq[c2]];
           idx = c2;
-        } else if (this.pq[c1].weight > this.pq[idx].weight) {
+        } else if (this.pq[c1].weight < this.pq[idx].weight) {
           [this.pq[c1], this.pq[idx]] = [this.pq[idx], this.pq[c1]];
           idx = c1;
         } else {
           break;
         }
-      } else if (this.pq[c1].weight > this.pq[idx].weight) {
+      } else if (this.pq[c1].weight < this.pq[idx].weight) {
         [this.pq[c1], this.pq[idx]] = [this.pq[idx], this.pq[c1]];
         idx = c1;
       } else {
@@ -64,4 +64,4 @@ class BinaryMaxHeap {
   }
 }
 
-export default BinaryMaxHeap;
+export default BinaryMinHeap;
