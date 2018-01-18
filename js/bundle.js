@@ -126,7 +126,12 @@ var _generate_maze2 = _interopRequireDefault(_generate_maze);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var canvasEl = document.getElementsByTagName("canvas")[0]; // import View from './view';
+$(function () {
+  var canvasEl = document.getElementsByTagName("canvas")[0];
+  canvasEl.height = window.innerHeight;
+  canvasEl.width = window.innerWidth;
+  new _generate_maze2.default(canvasEl.width, canvasEl.height).start(canvasEl);
+}); // import View from './view';
 //
 // $(() => {
 //   const mazeOne = $('.maze-viz-1');
@@ -136,10 +141,6 @@ var canvasEl = document.getElementsByTagName("canvas")[0]; // import View from '
 //   viewOne.render();
 //   viewTwo.render();
 // });
-
-canvasEl.height = window.innerHeight;
-canvasEl.width = window.innerWidth;
-new _generate_maze2.default(canvasEl.width, canvasEl.height).start(canvasEl);
 
 /***/ }),
 /* 2 */,
@@ -592,7 +593,7 @@ var Edge = function () {
     this.vertex1 = vertex1;
     this.vertex2 = vertex2;
     this.weight = Math.random();
-    this.color = "white";
+    this.color = "black";
   }
 
   _createClass(Edge, [{
@@ -650,8 +651,9 @@ var GenerateMaze = function () {
 
     this.width = width;
     this.height = height;
-    this.grid = new _grid2.default(5);
+    this.grid = new _grid2.default(50);
     this.allEdges = new _prims2.default(this.grid).generate();
+    this.edges = [];
   }
 
   _createClass(GenerateMaze, [{

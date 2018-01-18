@@ -11,7 +11,9 @@
 
 import GenerateMaze from './generate_maze';
 
-const canvasEl = document.getElementsByTagName("canvas")[0];
-canvasEl.height = window.innerHeight;
-canvasEl.width = window.innerWidth;
-new GenerateMaze(canvasEl.width, canvasEl.height).start(canvasEl);
+$(() => {
+  const canvasEl = document.getElementsByTagName("canvas")[0];
+  canvasEl.height = window.innerHeight;
+  canvasEl.width = window.innerWidth;
+  new GenerateMaze(canvasEl.width, canvasEl.height).start(canvasEl);
+});

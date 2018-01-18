@@ -3,7 +3,7 @@ class Edge {
     this.vertex1 = vertex1;
     this.vertex2 = vertex2;
     this.weight = Math.random();
-    this.color = "white";
+    this.color = "black";
   }
 
   render(ctx) {

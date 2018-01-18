@@ -5,8 +5,9 @@ class GenerateMaze {
   constructor(width, height) {
     this.width = width;
     this.height = height;
-    this.grid = new Grid(5);
+    this.grid = new Grid(50);
     this.allEdges = new Prims(this.grid).generate();
+    this.edges = [];
   }
 
   render(ctx) {
