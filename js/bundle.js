@@ -131,7 +131,8 @@ $(function () {
   var canvasEl = document.getElementsByTagName("canvas")[0];
   canvasEl.height = 620;
   canvasEl.width = 620;
-  new _generate_maze2.default(canvasEl.width, canvasEl.height, 30).start(canvasEl);
+  var maze = new _generate_maze2.default(canvasEl.width, canvasEl.height, 10);
+  maze.generate(canvasEl);
 });
 
 /***/ }),
@@ -154,6 +155,10 @@ var _grid2 = _interopRequireDefault(_grid);
 var _prims = __webpack_require__(4);
 
 var _prims2 = _interopRequireDefault(_prims);
+
+var _edge = __webpack_require__(6);
+
+var _edge2 = _interopRequireDefault(_edge);
 
 var _bfs = __webpack_require__(7);
 
@@ -202,8 +207,8 @@ var GenerateMaze = function () {
       ctx.fillRect(goalX, goalY, 10, 10);
     }
   }, {
-    key: 'start',
-    value: function start(canvasEl) {
+    key: 'generate',
+    value: function generate(canvasEl) {
       var _this = this;
 
       var ctx = canvasEl.getContext("2d");
@@ -213,25 +218,39 @@ var GenerateMaze = function () {
           _this.edges.push(_this.allEdges.shift());
           _this.render(ctx);
           requestAnimationFrame(animateCallback);
+        } else {
           _this.renderEndpoints(ctx);
+          _this.solve(ctx);
         }
       };
 
       animateCallback();
     }
   }, {
-    key: 'solve',
-    value: function solve(canvasEl) {
-      var _this2 = this;
-
-      var ctx = canvasEl.getContext("2d");
+    key: 'pathToEdges',
+    value: function pathToEdges() {
       var pathEdges = [];
+      for (var i = 1; i < this.path.length; i++) {
+        pathEdges.push(new _edge2.default(this.path[i - 1], this.path[i]));
+      }
+
+      return pathEdges;
+    }
+  }, {
+    key: 'solve',
+    value: function solve(ctx) {
+      var pathEdges = this.pathToEdges();
+      var renderedEdges = [];
 
       var animateCallback = function animateCallback() {
-        if (_this2.path.length > 0) {
-          pathEdges.push(_this2.path.pop());
-          // this.render(ctx);
-          requestAnimationFrame(animateCallback);
+        if (pathEdges.length > 0) {
+          renderedEdges.push(pathEdges.shift());
+
+          renderedEdges.forEach(function (edge) {
+            edge.render(ctx, "blue");
+          });
+
+          setTimeout(animateCallback, 1000);
         }
       };
 
@@ -624,9 +643,8 @@ var BreadthFirstSearch = function () {
         path.push(path.slice(-1)[0].parent);
       }
 
-      return path.map(function (node) {
-        return node.value;
-      });
+      return path;
+      // return path.map(node => { return node.value; });
     }
   }, {
     key: 'solve',

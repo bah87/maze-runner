@@ -30,7 +30,8 @@ class BreadthFirstSearch {
       path.push(path.slice(-1)[0].parent);
     }
 
-    return path.map(node => { return node.value; });
+    return path;
+    // return path.map(node => { return node.value; });
   }
 
   solve() {

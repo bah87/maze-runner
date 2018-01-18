@@ -1,5 +1,6 @@
 import Grid from './grid';
 import Prims from './prims';
+import Edge from './edge';
 import BreadthFirstSearch from './bfs';
 
 class GenerateMaze {
@@ -36,7 +37,7 @@ class GenerateMaze {
     ctx.fillRect(goalX, goalY, 10, 10);
   }
 
-  start(canvasEl) {
+  generate(canvasEl) {
     const ctx = canvasEl.getContext("2d");
 
     const animateCallback = () => {
@@ -44,22 +45,37 @@ class GenerateMaze {
         this.edges.push(this.allEdges.shift());
         this.render(ctx);
         requestAnimationFrame(animateCallback);
+      } else {
         this.renderEndpoints(ctx);
+        this.solve(ctx);
       }
     };
 
     animateCallback();
   }
 
-  solve(canvasEl) {
-    const ctx = canvasEl.getContext("2d");
+  pathToEdges() {
     const pathEdges = [];
+    for (let i = 1; i < this.path.length; i++) {
+      pathEdges.push(new Edge(this.path[i-1], this.path[i]));
+    }
+
+    return pathEdges;
+  }
+
+  solve(ctx) {
+    const pathEdges = this.pathToEdges();
+    const renderedEdges = [];
 
     const animateCallback = () => {
-      if (this.path.length > 0) {
-        pathEdges.push(this.path.pop());
-        // this.render(ctx);
-        requestAnimationFrame(animateCallback);
+      if (pathEdges.length > 0) {
+        renderedEdges.push(pathEdges.shift());
+
+        renderedEdges.forEach(edge => {
+          edge.render(ctx, "blue");
+        });
+
+        setTimeout(animateCallback, 1000);
       }
     };
 
