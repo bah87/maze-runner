@@ -18,25 +18,22 @@ Grid.placeEndpoints = grid => {
     i = Math.floor(Math.random() * grid.size);
     j = Math.floor(Math.random() * grid.size);
   }
-  return [i + 1, j + 1];
+  return [i, j];
 };
 
 Grid.makeGrid = size => {
-  let nullRow = new Array(size + 2).fill(null);
-  let grid = [nullRow];
+  let grid = [];
   for (let i = 0; i < size; i++) {
-    let row = [null];
+    let row = [];
     for (let j = 0; j < size; j++) {
       if (Math.random() > 0.25) {
-        row.push(new Node([i, j]));
+        row.push(new Node([i, j], i * size + j));
       } else {
         row.push(null);
       }
     }
-    row.push(null);
     grid.push(row);
   }
-  grid.push(nullRow);
   return grid;
 };
 

@@ -1,6 +1,7 @@
 class Node {
-  constructor(pos) {
+  constructor(pos, value) {
     this.pos = pos;
+    this.value = value;
   }
 
   neighbors() {

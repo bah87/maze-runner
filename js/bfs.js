@@ -2,24 +2,23 @@ const Node = require('./node.js');
 
 class BFS {
   constructor(startPos, goalPos, grid) {
-    this.queue = [new Node(startPos)];
+    this.queue = [new Node(startPos, startPos[0] * grid.size + startPos[1])];
     this.visited = {};
-    this.goalPos = goalPos;
+    this.goalNode = new Node(goalPos, goalPos[0] * grid.size + goalPos[1]);
     this.grid = grid;
   }
 
   traverseGrid() {
     while (this.queue.length > 0) {
       let current = this.queue.shift();
-      this.visited[current.pos.join("")] = true;
-      if (current.pos[0] === this.goalPos[0] &&
-      current.pos[1] === this.goalPos[1]) {
+      this.visited[current.value] = true;
+      if (current.value === this.goalNode.value) {
         return current;
       }
 
       current.grid = this.grid;
       current.neighbors().forEach(neighbor => {
-        if (!this.queue.includes(neighbor) && !this.visited[neighbor.pos.join("")]) {
+        if (!this.queue.includes(neighbor) && !this.visited[neighbor.value]) {
           neighbor.parent = current;
           this.queue.push(neighbor);
         }
@@ -29,13 +28,11 @@ class BFS {
 
   traversePath() {
     let path = [this.traverseGrid()];
-    // while (path.slice(-1)[0].parent) {
-    //   path.push(path.slice(-1)[0].parent);
-    // }
+    while (path.slice(-1)[0].parent) {
+      path.push(path.slice(-1)[0].parent);
+    }
 
-    debugger
-    return path;
-    // return path.map(node => { return node.pos; });
+    return path.map(node => { return node.value; });
   }
 
   solve() {

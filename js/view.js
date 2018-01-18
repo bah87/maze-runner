@@ -11,17 +11,17 @@ class View {
 
   makeGrid() {
     let html = "";
-    for (let i = 1; i <= this.grid.size; i++) {
+    for (let i = 0; i < this.grid.size; i++) {
       html += "<ul>";
-      for (let j = 1; j <= this.grid.size; j++) {
+      for (let j = 0; j < this.grid.size; j++) {
         if (i === this.grid.startPos[0] && j === this.grid.startPos[1]) {
-          html += "<li class=start></li>";
+          html += `<li class=start>${i * this.grid.size + j}</li>`;
         } else if (i === this.grid.goalPos[0] && j === this.grid.goalPos[1]) {
-          html += "<li class=goal></li>";
+          html += `<li class=goal>${i * this.grid.size + j}</li>`;
         } else if (this.grid.array[i][j]) {
-          html += "<li class=path></li>";
+          html += `<li class=path>${i * this.grid.size + j}</li>`;
         } else {
-          html += "<li class=wall></li>";
+          html += `<li class=wall>${i * this.grid.size + j}</li>`;
         }
       }
       html += "</ul>";
