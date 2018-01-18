@@ -2,6 +2,7 @@ class Node {
   constructor(pos, value) {
     this.pos = pos;
     this.value = value;
+    this.edgeNeighbors = [];
   }
 
   neighbors() {

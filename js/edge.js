@@ -4,6 +4,14 @@ class Edge {
     this.vertex2 = vertex2;
     this.weight = Math.random();
     this.color = "white";
+
+    // Whenever edge gets created, make 2 vertices neighbors
+    if (!vertex1.edgeNeighbors.includes(vertex2)) {
+      vertex1.edgeNeighbors.push(vertex2);
+    }
+    if (!vertex2.edgeNeighbors.includes(vertex1)) {
+      vertex2.edgeNeighbors.push(vertex1);
+    }
   }
 
   render(ctx) {
@@ -21,6 +29,12 @@ class Edge {
     } else if (x1 === x2 && y1 > y2) {
       y2 -= lineWidth / 2;
       y1 += lineWidth / 2;
+    } else if (y1 === y2 && x1 < x2) {
+      x1 -= lineWidth / 2;
+      x2 += lineWidth / 2;
+    } else {
+      x2 -= lineWidth / 2;
+      x1 += lineWidth / 2;
     }
 
     ctx.beginPath();
