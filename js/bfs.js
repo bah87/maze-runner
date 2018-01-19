@@ -5,11 +5,11 @@ class BreadthOrDepthFirstSearch {
   constructor(startPos, goalPos, grid, ctx, search) {
     this.queue = [grid.array[startPos[0]][startPos[1]]];
     this.visited = {
-      bool: new Array(Math.pow(grid.size, 2)).fill(false),
+      bool: new Array(grid.width * grid.height).fill(false),
       all: [],
       save: []
     };
-    this.goalValue = goalPos[0] * grid.size + goalPos[1];
+    this.goalValue = goalPos[0] * grid.width + goalPos[1];
     this.search = search;
   }
 

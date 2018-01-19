@@ -11,6 +11,13 @@ canvas {
   padding: 10px;
 }
 
+.canvas-container {
+  margin: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 li {
   width: 20px;
   height: 20px;

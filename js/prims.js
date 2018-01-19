@@ -8,7 +8,7 @@ class Prims {
     this.grid = grid;
     this.boolean = {
       length: 0,
-      array: new Array(Math.pow(this.grid.size, 2)).fill(false)
+      array: new Array(this.grid.width * this.grid.height).fill(false)
     };
     this.edges = [];
   }

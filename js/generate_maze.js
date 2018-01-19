@@ -4,11 +4,11 @@ import Edge from './edge';
 import BreadthOrDepthFirstSearch from './bfs';
 
 class GenerateMaze {
-  constructor(canvasEl, size) {
-    this.width = canvasEl.width;
-    this.height = canvasEl.height;
+  constructor(canvasEl, width, height) {
+    this.width = width * 20 + 10;
+    this.height = height * 20 + 10;
     this.ctx = canvasEl.getContext("2d");
-    this.grid = new Grid(size);
+    this.grid = new Grid(width, height);
     this.allEdges = new Prims(this.grid).generate();
     this.startPos = this.grid.startPos;
     this.goalPos = this.grid.goalPos;

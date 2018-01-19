@@ -129,9 +129,11 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 $(function () {
   var canvasEl = document.getElementsByTagName("canvas")[0];
-  canvasEl.height = 620;
-  canvasEl.width = 620;
-  var maze = new _generate_maze2.default(canvasEl, 30);
+  var width = 50;
+  var height = 30;
+  canvasEl.height = height * 20 + 40;
+  canvasEl.width = width * 20 + 40;
+  var maze = new _generate_maze2.default(canvasEl, width, height);
   maze.generate(canvasEl);
 });
 
@@ -169,13 +171,13 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var GenerateMaze = function () {
-  function GenerateMaze(canvasEl, size) {
+  function GenerateMaze(canvasEl, width, height) {
     _classCallCheck(this, GenerateMaze);
 
-    this.width = canvasEl.width;
-    this.height = canvasEl.height;
+    this.width = width * 20 + 10;
+    this.height = height * 20 + 10;
     this.ctx = canvasEl.getContext("2d");
-    this.grid = new _grid2.default(size);
+    this.grid = new _grid2.default(width, height);
     this.allEdges = new _prims2.default(this.grid).generate();
     this.startPos = this.grid.startPos;
     this.goalPos = this.grid.goalPos;
@@ -307,31 +309,28 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var Grid = function Grid(size) {
+var Grid = function Grid(width, height) {
   _classCallCheck(this, Grid);
 
-  this.size = size;
-  this.array = Grid.makeGrid(size, -1);
+  this.width = width;
+  this.height = height;
+  this.array = Grid.makeGrid(width, height);
   this.startPos = Grid.placeEndpoints(this);
   this.goalPos = Grid.placeEndpoints(this);
 };
 
 Grid.placeEndpoints = function (grid) {
-  var i = Math.floor(Math.random() * grid.size);
-  var j = Math.floor(Math.random() * grid.size);
+  var i = Math.floor(Math.random() * grid.height);
+  var j = Math.floor(Math.random() * grid.width);
   return [i, j];
 };
 
-Grid.makeGrid = function (size, random) {
+Grid.makeGrid = function (width, height) {
   var grid = [];
-  for (var i = 0; i < size; i++) {
+  for (var i = 0; i < height; i++) {
     var row = [];
-    for (var j = 0; j < size; j++) {
-      if (Math.random() > random) {
-        row.push(new _node2.default([i, j], i * size + j));
-      } else {
-        row.push(null);
-      }
+    for (var j = 0; j < width; j++) {
+      row.push(new _node2.default([i, j], i * width + j));
     }
     grid.push(row);
   }
@@ -377,7 +376,7 @@ var Prims = function () {
     this.grid = grid;
     this.boolean = {
       length: 0,
-      array: new Array(Math.pow(this.grid.size, 2)).fill(false)
+      array: new Array(this.grid.width * this.grid.height).fill(false)
     };
     this.edges = [];
   }
@@ -636,11 +635,11 @@ var BreadthOrDepthFirstSearch = function () {
 
     this.queue = [grid.array[startPos[0]][startPos[1]]];
     this.visited = {
-      bool: new Array(Math.pow(grid.size, 2)).fill(false),
+      bool: new Array(grid.width * grid.height).fill(false),
       all: [],
       save: []
     };
-    this.goalValue = goalPos[0] * grid.size + goalPos[1];
+    this.goalValue = goalPos[0] * grid.width + goalPos[1];
     this.search = search;
   }
 
