@@ -74,6 +74,8 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
+var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
+
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -88,17 +90,44 @@ var Node = function () {
   }
 
   _createClass(Node, [{
+    key: "weight",
+    value: function weight(costSoFar, goal) {
+      // This is the heuristic for A*, named weight to be compatible with
+      // binary heap
+      return costSoFar + this.costToGoal(goal);
+    }
+  }, {
+    key: "costToGoal",
+    value: function costToGoal(goal) {
+      var _pos = _slicedToArray(this.pos, 2),
+          x1 = _pos[0],
+          y1 = _pos[1];
+
+      var _goal = _slicedToArray(goal, 2),
+          x2 = _goal[0],
+          y2 = _goal[1];
+
+      var aSquared = Math.pow(x2 - x1, 2);
+      var bSquared = Math.pow(y2 - y1, 2);
+      return Math.pow(aSquared + bSquared, 0.5);
+    }
+  }, {
     key: "neighbors",
     value: function neighbors() {
       var north = void 0;var east = void 0;var west = void 0;var south = void 0;
-      if (this.grid.array[this.pos[0] - 1]) {
-        north = this.grid.array[this.pos[0] - 1][this.pos[1]];
+
+      var _pos2 = _slicedToArray(this.pos, 2),
+          y = _pos2[0],
+          x = _pos2[1];
+
+      if (this.grid.array[y - 1]) {
+        north = this.grid.array[y - 1][x];
       }
-      if (this.grid.array[this.pos[0] + 1]) {
-        south = this.grid.array[this.pos[0] + 1][this.pos[1]];
+      if (this.grid.array[y + 1]) {
+        south = this.grid.array[y + 1][x];
       }
-      east = this.grid.array[this.pos[0]][this.pos[1] + 1];
-      west = this.grid.array[this.pos[0]][this.pos[1] - 1];
+      east = this.grid.array[y][x + 1];
+      west = this.grid.array[y][x - 1];
 
       var possibleNeighbors = [north, east, south, west];
       return possibleNeighbors.filter(function (neighbor) {
