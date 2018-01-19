@@ -179,7 +179,7 @@ var GenerateMaze = function () {
     this.allEdges = new _prims2.default(this.grid).generate();
     this.startPos = this.grid.startPos;
     this.goalPos = this.grid.goalPos;
-    this.search = new _bfs2.default(this.startPos, this.goalPos, this.grid, this.ctx, "BFS");
+    this.search = new _bfs2.default(this.startPos, this.goalPos, this.grid, this.ctx, "DFS");
     var results = this.search.solve();
     this.path = results[0];
     this.visited = results[1];
@@ -222,7 +222,6 @@ var GenerateMaze = function () {
         } else {
           _this.renderEndpoints(_this.ctx);
           _this.displayVisited(_this.ctx);
-          _this.solve(_this.ctx);
         }
       };
 
@@ -241,6 +240,8 @@ var GenerateMaze = function () {
   }, {
     key: 'displayVisited',
     value: function displayVisited(ctx) {
+      var _this2 = this;
+
       var visitedEdges = this.visited;
       var renderedEdges = [];
 
@@ -249,10 +250,12 @@ var GenerateMaze = function () {
           renderedEdges.push(visitedEdges.shift());
 
           renderedEdges.forEach(function (edge) {
-            edge.render(ctx, "pink");
+            edge.render(ctx, "orange");
           });
 
-          setTimeout(animateCallback, 1000 / 60);
+          setTimeout(animateCallback, 1000 / 120);
+        } else {
+          _this2.solve(_this2.ctx);
         }
       };
 
@@ -266,13 +269,13 @@ var GenerateMaze = function () {
 
       var animateCallback = function animateCallback() {
         if (pathEdges.length > 0) {
-          renderedEdges.push(pathEdges.pop());
+          renderedEdges.push(pathEdges.shift());
 
           renderedEdges.forEach(function (edge) {
             edge.render(ctx, "blue");
           });
 
-          setTimeout(animateCallback, 1000 / 20);
+          setTimeout(animateCallback, 1000 / 60);
         }
       };
 
@@ -653,6 +656,7 @@ var BreadthOrDepthFirstSearch = function () {
         } else {
           current = _this.queue.shift();
         }
+        _this.visited.save.push(_this.visited.all.pop());
         _this.visited.bool[current.value] = true;
         if (current.value === _this.goalValue) {
           return {
@@ -686,7 +690,7 @@ var BreadthOrDepthFirstSearch = function () {
         path.push(path.slice(-1)[0].parent);
       }
 
-      return [path, this.visited.arr.slice(1)];
+      return [path, this.visited.save.slice(1)];
     }
   }, {
     key: 'solve',

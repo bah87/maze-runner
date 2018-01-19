@@ -13,7 +13,7 @@ class GenerateMaze {
     this.startPos = this.grid.startPos;
     this.goalPos = this.grid.goalPos;
     this.search = new BreadthOrDepthFirstSearch(
-      this.startPos, this.goalPos, this.grid, this.ctx, "BFS"
+      this.startPos, this.goalPos, this.grid, this.ctx, "DFS"
     );
     let results = this.search.solve();
     this.path = results[0];
@@ -51,7 +51,6 @@ class GenerateMaze {
       } else {
         this.renderEndpoints(this.ctx);
         this.displayVisited(this.ctx);
-        this.solve(this.ctx);
       }
     };
 
@@ -76,10 +75,12 @@ class GenerateMaze {
         renderedEdges.push(visitedEdges.shift());
 
         renderedEdges.forEach(edge => {
-          edge.render(ctx, "pink");
+          edge.render(ctx, "orange");
         });
 
-        setTimeout(animateCallback, 1000/60);
+        setTimeout(animateCallback, 1000/120);
+      } else {
+        this.solve(this.ctx);
       }
     };
 
@@ -92,13 +93,13 @@ class GenerateMaze {
 
     const animateCallback = () => {
       if (pathEdges.length > 0) {
-        renderedEdges.push(pathEdges.pop());
+        renderedEdges.push(pathEdges.shift());
 
         renderedEdges.forEach(edge => {
           edge.render(ctx, "blue");
         });
 
-        setTimeout(animateCallback, 1000/20);
+        setTimeout(animateCallback, 1000/60);
       }
     };
 

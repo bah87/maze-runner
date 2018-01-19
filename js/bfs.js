@@ -21,6 +21,7 @@ class BreadthOrDepthFirstSearch {
       } else {
         current = this.queue.shift();
       }
+      this.visited.save.push(this.visited.all.pop());
       this.visited.bool[current.value] = true;
       if (current.value === this.goalValue) {
         return current;
@@ -46,7 +47,7 @@ class BreadthOrDepthFirstSearch {
       path.push(path.slice(-1)[0].parent);
     }
 
-    return [path, this.visited.arr.slice(1)];
+    return [path, this.visited.save.slice(1)];
   }
 
   solve() {
