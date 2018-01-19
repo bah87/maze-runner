@@ -2,7 +2,7 @@ import GenerateMaze from './generate_maze';
 
 $(() => {
   const canvasEl = document.getElementsByTagName("canvas")[0];
-  let width = 50;
+  let width = 40;
   let height = 30;
   canvasEl.height = height * 20 + 40;
   canvasEl.width = width * 20 + 40;
@@ -43,7 +43,7 @@ $(() => {
   });
 
   $(".search-btns").append("<button class=astar>A*</button>");
-  $(".astar").on("click", () => {
+  $(".astar").hover(() => {
     maze.quickRegen();
     if (astarClicked) {
       maze.quickDisplay("A*");

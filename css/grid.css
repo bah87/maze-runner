@@ -1,16 +1,3 @@
-ul {
-  list-style: none;
-  display: flex;
-  margin: 0;
-  padding: 0;
-}
-
-canvas {
-  margin-left: 20px;
-  margin-top: 20px;
-  padding: 10px;
-}
-
 .canvas-container {
   margin: auto;
   display: flex;
@@ -18,39 +5,37 @@ canvas {
   justify-content: center;
 }
 
-li {
-  width: 20px;
-  height: 20px;
-  margin: 0;
-  padding: 0;
-}
-
-.path {
-  background-color: orange;
-}
-
-.visited {
-  background-color: blue;
-}
-
-.start {
-  background-color: green;
-}
-
-.goal {
-  background-color: red;
-}
-
-.wall {
-  background-color: black;
-}
-
-.figure-container {
-  display: flex;
-}
-
 figure {
   width: 500px;
   height: 500px;
   border: 1px solid black;
+}
+
+
+body {
+  background-color: rgb(35, 35, 35);
+  color: white;
+  font-family: 'PT Sans', sans-serif;
+
+}
+
+.title {
+  margin: auto;
+  width: 300px;
+}
+
+button {
+  padding: 6px 12px;
+  font-size: 16px;
+  margin: 5px;
+  border: none;
+  font-family: 'PT Sans', sans-serif;
+  background-color: transparent;
+  color: white;
+  border-radius: 16px;
+}
+
+button:hover {
+  cursor: pointer;
+  background-color: black;
 }

@@ -96,8 +96,6 @@ class GenerateMaze {
         visited = this.visitedAstar;
         break;
     }
-    console.log(path);
-    console.log(visited);
 
     visited.forEach(edge => {
       edge.render(this.ctx, "orange");

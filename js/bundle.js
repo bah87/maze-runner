@@ -161,7 +161,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 $(function () {
   var canvasEl = document.getElementsByTagName("canvas")[0];
-  var width = 50;
+  var width = 40;
   var height = 30;
   canvasEl.height = height * 20 + 40;
   canvasEl.width = width * 20 + 40;
@@ -202,7 +202,7 @@ $(function () {
   });
 
   $(".search-btns").append("<button class=astar>A*</button>");
-  $(".astar").on("click", function () {
+  $(".astar").hover(function () {
     maze.quickRegen();
     if (astarClicked) {
       maze.quickDisplay("A*");
@@ -358,8 +358,6 @@ var GenerateMaze = function () {
           visited = this.visitedAstar;
           break;
       }
-      console.log(path);
-      console.log(visited);
 
       visited.forEach(function (edge) {
         edge.render(_this3.ctx, "orange");
