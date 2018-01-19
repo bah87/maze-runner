@@ -90,22 +90,24 @@ var Node = function () {
   }
 
   _createClass(Node, [{
-    key: "weight",
-    value: function weight(costSoFar, goal) {
-      // This is the heuristic for A*, named weight to be compatible with
-      // binary heap
-      return costSoFar + this.costToGoal(goal);
+    key: "calcHeuristic",
+    value: function calcHeuristic(fromNode) {
+      // This is the heuristic for A*
+      // Setting this.weight to result to be compatible with binary heap
+      this.costSoFar = fromNode.costSoFar + this.costToPos(fromNode);
+      this.weight = this.costSoFar + this.costToPos(fromNode.goalPos);
+      return this.weight;
     }
   }, {
-    key: "costToGoal",
-    value: function costToGoal(goal) {
+    key: "costToPos",
+    value: function costToPos(pos) {
       var _pos = _slicedToArray(this.pos, 2),
           x1 = _pos[0],
           y1 = _pos[1];
 
-      var _goal = _slicedToArray(goal, 2),
-          x2 = _goal[0],
-          y2 = _goal[1];
+      var _pos2 = _slicedToArray(pos, 2),
+          x2 = _pos2[0],
+          y2 = _pos2[1];
 
       var aSquared = Math.pow(x2 - x1, 2);
       var bSquared = Math.pow(y2 - y1, 2);
@@ -116,9 +118,9 @@ var Node = function () {
     value: function neighbors() {
       var north = void 0;var east = void 0;var west = void 0;var south = void 0;
 
-      var _pos2 = _slicedToArray(this.pos, 2),
-          y = _pos2[0],
-          x = _pos2[1];
+      var _pos3 = _slicedToArray(this.pos, 2),
+          y = _pos3[0],
+          x = _pos3[1];
 
       if (this.grid.array[y - 1]) {
         north = this.grid.array[y - 1][x];

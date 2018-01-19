@@ -5,15 +5,17 @@ class Node {
     this.edgeNeighbors = [];
   }
 
-  weight(costSoFar, goal) {
-    // This is the heuristic for A*, named weight to be compatible with
-    // binary heap
-    return costSoFar + this.costToGoal(goal);
+  calcHeuristic(fromNode) {
+    // This is the heuristic for A*
+    // Setting this.weight to result to be compatible with binary heap
+    this.costSoFar = fromNode.costSoFar + this.costToPos(fromNode);
+    this.weight = this.costSoFar + this.costToPos(fromNode.goalPos);
+    return this.weight;
   }
 
-  costToGoal(goal) {
+  costToPos(pos) {
     let [x1, y1] = this.pos;
-    let [x2, y2] = goal;
+    let [x2, y2] = pos;
     let aSquared = Math.pow(x2 - x1, 2);
     let bSquared = Math.pow(y2 - y1, 2);
     return Math.pow(aSquared + bSquared, 0.5);
