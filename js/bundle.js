@@ -160,7 +160,7 @@ $(function () {
   var height = 30;
   canvasEl.height = height * 20 + 40;
   canvasEl.width = width * 20 + 40;
-  var search = "A*";
+  var search = "DFS";
   var maze = new _generate_maze2.default(canvasEl, width, height, search);
   maze.generate(canvasEl);
 
@@ -714,10 +714,11 @@ var BreadthOrDepthFirstSearch = function () {
         var current = void 0;
         if (_this.searchType === "DFS") {
           current = _this.queue.pop();
+          _this.visited.save.push(_this.visited.all.pop());
         } else {
           current = _this.queue.shift();
+          _this.visited.save.push(_this.visited.all.shift());
         }
-        _this.visited.save.push(_this.visited.all.pop());
         _this.visited.bool[current.value] = true;
         if (current.value === _this.goalValue) {
           return {

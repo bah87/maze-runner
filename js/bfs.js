@@ -18,10 +18,11 @@ class BreadthOrDepthFirstSearch {
       let current;
       if (this.searchType === "DFS") {
         current = this.queue.pop();
+        this.visited.save.push(this.visited.all.pop());
       } else {
         current = this.queue.shift();
+        this.visited.save.push(this.visited.all.shift());
       }
-      this.visited.save.push(this.visited.all.pop());
       this.visited.bool[current.value] = true;
       if (current.value === this.goalValue) {
         return current;
