@@ -6,8 +6,7 @@ $(() => {
   let height = 30;
   canvasEl.height = height * 20 + 40;
   canvasEl.width = width * 20 + 40;
-  let search = "A*";
-  const maze = new GenerateMaze(canvasEl, width, height, search);
+  const maze = new GenerateMaze(canvasEl, width, height);
   maze.generate(canvasEl);
 
   $(".search-btns").append("<button class=maze-regen>Regenerate Maze</button>");

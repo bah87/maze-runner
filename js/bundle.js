@@ -165,8 +165,7 @@ $(function () {
   var height = 30;
   canvasEl.height = height * 20 + 40;
   canvasEl.width = width * 20 + 40;
-  var search = "A*";
-  var maze = new _generate_maze2.default(canvasEl, width, height, search);
+  var maze = new _generate_maze2.default(canvasEl, width, height);
   maze.generate(canvasEl);
 
   $(".search-btns").append("<button class=maze-regen>Regenerate Maze</button>");
@@ -231,18 +230,18 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var GenerateMaze = function () {
-  function GenerateMaze(canvasEl, width, height, search) {
+  function GenerateMaze(canvasEl, width, height) {
     _classCallCheck(this, GenerateMaze);
 
     this.width = width * 20 + 10;
     this.height = height * 20 + 10;
     this.ctx = canvasEl.getContext("2d");
-    this.setup(width, height, search);
+    this.setup(width, height);
   }
 
   _createClass(GenerateMaze, [{
     key: 'setup',
-    value: function setup(width, height, search) {
+    value: function setup(width, height) {
       this.grid = new _grid2.default(width, height);
       this.startPos = this.grid.startPos;
       this.goalPos = this.grid.goalPos;
@@ -289,6 +288,7 @@ var GenerateMaze = function () {
     value: function generate() {
       var _this2 = this;
 
+      this.setup(this.grid.width, this.grid.height);
       this.allEdges = new _prims2.default(this.grid).generate();
       this.edges = [];
       var i = 0;

@@ -5,14 +5,14 @@ import AStar from './a_star';
 import BreadthOrDepthFirstSearch from './bfs';
 
 class GenerateMaze {
-  constructor(canvasEl, width, height, search) {
+  constructor(canvasEl, width, height) {
     this.width = width * 20 + 10;
     this.height = height * 20 + 10;
     this.ctx = canvasEl.getContext("2d");
-    this.setup(width, height, search);
+    this.setup(width, height);
   }
 
-  setup(width, height, search) {
+  setup(width, height) {
     this.grid = new Grid(width, height);
     this.startPos = this.grid.startPos;
     this.goalPos = this.grid.goalPos;
@@ -51,6 +51,7 @@ class GenerateMaze {
   }
 
   generate() {
+    this.setup(this.grid.width, this.grid.height);
     this.allEdges = new Prims(this.grid).generate();
     this.edges = [];
     let i = 0;
@@ -127,7 +128,7 @@ class GenerateMaze {
         renderedEdges.forEach(edge => {
           edge.render(this.ctx, "blue");
         });
-        
+
         requestAnimationFrame(animateCallback);
       }
     };
