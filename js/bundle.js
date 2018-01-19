@@ -156,13 +156,17 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 $(function () {
   var canvasEl = document.getElementsByTagName("canvas")[0];
-  var width = 10;
-  var height = 10;
+  var width = 50;
+  var height = 30;
   canvasEl.height = height * 20 + 40;
   canvasEl.width = width * 20 + 40;
   var search = "A*";
   var maze = new _generate_maze2.default(canvasEl, width, height, search);
   maze.generate(canvasEl);
+
+  $(".search-btns").append("<button>BFS</button>");
+  $(".search-btns").append("<button>DFS</button>");
+  $(".search-btns").append("<button>A*</button>");
 });
 
 /***/ }),
@@ -236,7 +240,8 @@ var GenerateMaze = function () {
       var results = this.search.solve();
       this.path = results[0];
       this.visited = results[1];
-      this.edges = [];
+      this.edges = this.allEdges;
+      // this.edges = [];
     }
   }, {
     key: 'render',
@@ -264,20 +269,22 @@ var GenerateMaze = function () {
   }, {
     key: 'generate',
     value: function generate() {
-      var _this = this;
+      // const animateCallback = () => {
+      //   if (this.allEdges.length > 0) {
+      //     this.edges.push(this.allEdges.shift());
+      //     this.render(this.ctx);
+      //     requestAnimationFrame(animateCallback);
+      //   } else {
+      //     this.renderEndpoints(this.ctx);
+      //     this.displayVisited(this.ctx);
+      //   }
+      // };
+      //
+      // animateCallback();
 
-      var animateCallback = function animateCallback() {
-        if (_this.allEdges.length > 0) {
-          _this.edges.push(_this.allEdges.shift());
-          _this.render(_this.ctx);
-          requestAnimationFrame(animateCallback);
-        } else {
-          _this.renderEndpoints(_this.ctx);
-          _this.displayVisited(_this.ctx);
-        }
-      };
-
-      animateCallback();
+      this.render(this.ctx);
+      this.renderEndpoints(this.ctx);
+      this.displayVisited(this.ctx);
     }
   }, {
     key: 'nodesToEdges',
@@ -292,7 +299,7 @@ var GenerateMaze = function () {
   }, {
     key: 'displayVisited',
     value: function displayVisited(ctx) {
-      var _this2 = this;
+      var _this = this;
 
       var visitedEdges = this.visited;
       var renderedEdges = [];
@@ -307,7 +314,7 @@ var GenerateMaze = function () {
 
           setTimeout(animateCallback, 1000 / 120);
         } else {
-          _this2.solve(_this2.ctx);
+          _this.solve(_this.ctx);
         }
       };
 
@@ -794,7 +801,11 @@ var AStar = function () {
 
     this.pq = new _binary_heap2.default();
     this.grid = grid;
-    this.visited = new Array(grid.width * grid.height).fill(false);
+    this.visited = {
+      bool: new Array(grid.width * grid.height).fill(false),
+      pq: new _binary_heap2.default(),
+      save: []
+    };
     this.goalValue = grid.goalPos[0] * grid.width + grid.goalPos[1];
     this.setupPriorityQueue();
   }
@@ -810,7 +821,7 @@ var AStar = function () {
       startNode.goalPos = this.grid.goalPos;
       startNode.calcHeuristic(startNode, 0);
       startNode.parent = null;
-      this.visited[startNode.value] = true;
+      this.visited.bool[startNode.value] = true;
       this.pq.put(startNode);
     }
   }, {
@@ -821,6 +832,8 @@ var AStar = function () {
       var _loop = function _loop() {
         var current = _this.pq.take();
 
+        _this.visited.save.push(_this.visited.pq.take());
+
         if (current.value === _this.goalValue) {
           return {
             v: current
@@ -830,11 +843,15 @@ var AStar = function () {
         current.edgeNeighbors.forEach(function (neighbor) {
           var newCost = current.costSoFar + current.costToPos(neighbor);
 
-          if (!_this.visited[neighbor.value] || newCost < neighbor.costSoFar) {
-            _this.visited[neighbor.value] = true;
+          if (!_this.visited.bool[neighbor.value] || newCost < neighbor.costSoFar) {
+            _this.visited.bool[neighbor.value] = true;
             neighbor.calcHeuristic(current, newCost);
             neighbor.parent = current;
             _this.pq.put(neighbor);
+
+            var edge = new _edge2.default(current, neighbor, true);
+            edge.weight = neighbor.weight;
+            _this.visited.pq.put(edge);
           }
         });
       };
@@ -853,8 +870,6 @@ var AStar = function () {
       while (path.slice(-1)[0].parent) {
         path.push(path.slice(-1)[0].parent);
       }
-
-      console.log(path);
 
       return [path, this.visited.save.slice(1)];
     }

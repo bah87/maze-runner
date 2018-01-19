@@ -34,7 +34,8 @@ class GenerateMaze {
     let results = this.search.solve();
     this.path = results[0];
     this.visited = results[1];
-    this.edges = [];
+    this.edges = this.allEdges;
+    // this.edges = [];
   }
 
   render(ctx) {
@@ -59,18 +60,22 @@ class GenerateMaze {
   }
 
   generate() {
-    const animateCallback = () => {
-      if (this.allEdges.length > 0) {
-        this.edges.push(this.allEdges.shift());
-        this.render(this.ctx);
-        requestAnimationFrame(animateCallback);
-      } else {
-        this.renderEndpoints(this.ctx);
-        this.displayVisited(this.ctx);
-      }
-    };
+    // const animateCallback = () => {
+    //   if (this.allEdges.length > 0) {
+    //     this.edges.push(this.allEdges.shift());
+    //     this.render(this.ctx);
+    //     requestAnimationFrame(animateCallback);
+    //   } else {
+    //     this.renderEndpoints(this.ctx);
+    //     this.displayVisited(this.ctx);
+    //   }
+    // };
+    //
+    // animateCallback();
 
-    animateCallback();
+    this.render(this.ctx);
+    this.renderEndpoints(this.ctx);
+    this.displayVisited(this.ctx);
   }
 
   nodesToEdges(path) {

@@ -5,7 +5,11 @@ class AStar {
   constructor(grid) {
     this.pq = new BinaryMinHeap();
     this.grid = grid;
-    this.visited = new Array(grid.width * grid.height).fill(false);
+    this.visited = {
+      bool: new Array(grid.width * grid.height).fill(false),
+      pq: new BinaryMinHeap(),
+      save: []
+    };
     this.goalValue = grid.goalPos[0] * grid.width + grid.goalPos[1];
     this.setupPriorityQueue();
   }
@@ -16,13 +20,15 @@ class AStar {
     startNode.goalPos = this.grid.goalPos;
     startNode.calcHeuristic(startNode, 0);
     startNode.parent = null;
-    this.visited[startNode.value] = true;
+    this.visited.bool[startNode.value] = true;
     this.pq.put(startNode);
   }
 
   traverseGrid() {
     while (this.pq.length() > 1) {
       let current = this.pq.take();
+
+      this.visited.save.push(this.visited.pq.take());
 
       if (current.value === this.goalValue) {
         return current;
@@ -31,12 +37,16 @@ class AStar {
       current.edgeNeighbors.forEach(neighbor => {
         let newCost = current.costSoFar + current.costToPos(neighbor);
 
-        if (!this.visited[neighbor.value]
+        if (!this.visited.bool[neighbor.value]
             || newCost < neighbor.costSoFar) {
-          this.visited[neighbor.value] = true;
+          this.visited.bool[neighbor.value] = true;
           neighbor.calcHeuristic(current, newCost);
           neighbor.parent = current;
           this.pq.put(neighbor);
+
+          let edge = new Edge(current, neighbor, true);
+          edge.weight = neighbor.weight;
+          this.visited.pq.put(edge);
         }
       });
     }
@@ -48,8 +58,6 @@ class AStar {
     while (path.slice(-1)[0].parent) {
       path.push(path.slice(-1)[0].parent);
     }
-
-    console.log(path);
 
     return [path, this.visited.save.slice(1)];
   }
