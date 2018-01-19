@@ -10,7 +10,26 @@ $(() => {
   const maze = new GenerateMaze(canvasEl, width, height, search);
   maze.generate(canvasEl);
 
-  $(".search-btns").append("<button>BFS</button>");
-  $(".search-btns").append("<button>DFS</button>");
-  $(".search-btns").append("<button>A*</button>");
+  $(".search-btns").append("<button class=maze-regen>Regenerate Maze</button>");
+  $(".maze-regen").on("click", () => {
+    maze.generate(canvasEl);
+  });
+
+  $(".search-btns").append("<button class=bfs>BFS</button>");
+  $(".bfs").on("click", () => {
+    maze.quickRegen();
+    maze.displayVisited("BFS");
+  });
+
+  $(".search-btns").append("<button class=dfs>DFS</button>");
+  $(".dfs").on("click", () => {
+    maze.quickRegen();
+    maze.displayVisited("DFS");
+  });
+
+  $(".search-btns").append("<button class=astar>A*</button>");
+  $(".astar").on("click", () => {
+    maze.quickRegen();
+    maze.displayVisited("A*");
+  });
 });
