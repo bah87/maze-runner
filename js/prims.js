@@ -25,12 +25,24 @@ class Prims {
     while (!this.treeFull()) {
       let cheapestEdge = this.pq.take();
       if (!this.boolean[cheapestEdge.vertex2.value]) {
-        cheapestEdge.vertex2.grid = this.grid;
-        this.boolean[cheapestEdge.vertex2.value] = true;
+        let vertex1 = cheapestEdge.vertex1;
+        let vertex2 = cheapestEdge.vertex2;
+
+        vertex2.grid = this.grid;
+        this.boolean[vertex2.value] = true;
         this.boolean.length++;
+
+        // Whenever edge gets created, make 2 vertices neighbors
+        if (!vertex1.edgeNeighbors.includes(vertex2)) {
+          vertex1.edgeNeighbors.push(vertex2);
+        }
+        if (!vertex2.edgeNeighbors.includes(vertex1)) {
+          vertex2.edgeNeighbors.push(vertex1);
+        }
+
         this.edges.push(cheapestEdge);
-        cheapestEdge.vertex2.neighbors().forEach(neighbor => {
-          this.pq.put(new Edge(cheapestEdge.vertex2, neighbor));
+        vertex2.neighbors().forEach(neighbor => {
+          this.pq.put(new Edge(vertex2, neighbor));
         });
       }
     }

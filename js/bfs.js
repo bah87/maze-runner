@@ -1,7 +1,7 @@
 import Node from './node';
 
 class BreadthFirstSearch {
-  constructor(startPos, goalPos, grid) {
+  constructor(startPos, goalPos, grid, ctx) {
     this.queue = [grid.array[startPos[0]][startPos[1]]];
     this.visited = {};
     this.goalValue = goalPos[0] * grid.size + goalPos[1];
@@ -31,7 +31,6 @@ class BreadthFirstSearch {
     }
 
     return path;
-    // return path.map(node => { return node.value; });
   }
 
   solve() {

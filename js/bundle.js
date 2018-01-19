@@ -131,7 +131,7 @@ $(function () {
   var canvasEl = document.getElementsByTagName("canvas")[0];
   canvasEl.height = 620;
   canvasEl.width = 620;
-  var maze = new _generate_maze2.default(canvasEl.width, canvasEl.height, 10);
+  var maze = new _generate_maze2.default(canvasEl, 30);
   maze.generate(canvasEl);
 });
 
@@ -169,16 +169,17 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var GenerateMaze = function () {
-  function GenerateMaze(width, height, size) {
+  function GenerateMaze(canvasEl, size) {
     _classCallCheck(this, GenerateMaze);
 
-    this.width = width;
-    this.height = height;
+    this.width = canvasEl.width;
+    this.height = canvasEl.height;
+    this.ctx = canvasEl.getContext("2d");
     this.grid = new _grid2.default(size);
     this.allEdges = new _prims2.default(this.grid).generate();
     this.startPos = this.grid.startPos;
     this.goalPos = this.grid.goalPos;
-    this.bfs = new _bfs2.default(this.startPos, this.goalPos, this.grid);
+    this.bfs = new _bfs2.default(this.startPos, this.goalPos, this.grid, this.ctx);
     this.path = this.bfs.solve();
     this.edges = [];
   }
@@ -208,19 +209,17 @@ var GenerateMaze = function () {
     }
   }, {
     key: 'generate',
-    value: function generate(canvasEl) {
+    value: function generate() {
       var _this = this;
-
-      var ctx = canvasEl.getContext("2d");
 
       var animateCallback = function animateCallback() {
         if (_this.allEdges.length > 0) {
           _this.edges.push(_this.allEdges.shift());
-          _this.render(ctx);
+          _this.render(_this.ctx);
           requestAnimationFrame(animateCallback);
         } else {
-          _this.renderEndpoints(ctx);
-          _this.solve(ctx);
+          _this.renderEndpoints(_this.ctx);
+          _this.solve(_this.ctx);
         }
       };
 
@@ -244,7 +243,7 @@ var GenerateMaze = function () {
 
       var animateCallback = function animateCallback() {
         if (pathEdges.length > 0) {
-          renderedEdges.push(pathEdges.shift());
+          renderedEdges.push(pathEdges.pop());
 
           renderedEdges.forEach(function (edge) {
             edge.render(ctx, "blue");
@@ -370,21 +369,31 @@ var Prims = function () {
         _this.pq.put(new _edge2.default(start, neighbor));
       });
 
-      var _loop = function _loop() {
-        var cheapestEdge = _this.pq.take();
-        if (!_this.boolean[cheapestEdge.vertex2.value]) {
-          cheapestEdge.vertex2.grid = _this.grid;
-          _this.boolean[cheapestEdge.vertex2.value] = true;
-          _this.boolean.length++;
-          _this.edges.push(cheapestEdge);
-          cheapestEdge.vertex2.neighbors().forEach(function (neighbor) {
-            _this.pq.put(new _edge2.default(cheapestEdge.vertex2, neighbor));
-          });
-        }
-      };
-
       while (!this.treeFull()) {
-        _loop();
+        var cheapestEdge = this.pq.take();
+        if (!this.boolean[cheapestEdge.vertex2.value]) {
+          (function () {
+            var vertex1 = cheapestEdge.vertex1;
+            var vertex2 = cheapestEdge.vertex2;
+
+            vertex2.grid = _this.grid;
+            _this.boolean[vertex2.value] = true;
+            _this.boolean.length++;
+
+            // Whenever edge gets created, make 2 vertices neighbors
+            if (!vertex1.edgeNeighbors.includes(vertex2)) {
+              vertex1.edgeNeighbors.push(vertex2);
+            }
+            if (!vertex2.edgeNeighbors.includes(vertex1)) {
+              vertex2.edgeNeighbors.push(vertex1);
+            }
+
+            _this.edges.push(cheapestEdge);
+            vertex2.neighbors().forEach(function (neighbor) {
+              _this.pq.put(new _edge2.default(vertex2, neighbor));
+            });
+          })();
+        }
       }
 
       return this.edges;
@@ -527,14 +536,6 @@ var Edge = function () {
     this.vertex1 = vertex1;
     this.vertex2 = vertex2;
     this.weight = Math.random();
-
-    // Whenever edge gets created, make 2 vertices neighbors
-    if (!vertex1.edgeNeighbors.includes(vertex2)) {
-      vertex1.edgeNeighbors.push(vertex2);
-    }
-    if (!vertex2.edgeNeighbors.includes(vertex1)) {
-      vertex2.edgeNeighbors.push(vertex1);
-    }
   }
 
   _createClass(Edge, [{
@@ -599,7 +600,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var BreadthFirstSearch = function () {
-  function BreadthFirstSearch(startPos, goalPos, grid) {
+  function BreadthFirstSearch(startPos, goalPos, grid, ctx) {
     _classCallCheck(this, BreadthFirstSearch);
 
     this.queue = [grid.array[startPos[0]][startPos[1]]];
@@ -644,7 +645,6 @@ var BreadthFirstSearch = function () {
       }
 
       return path;
-      // return path.map(node => { return node.value; });
     }
   }, {
     key: 'solve',

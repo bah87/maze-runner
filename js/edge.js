@@ -3,14 +3,6 @@ class Edge {
     this.vertex1 = vertex1;
     this.vertex2 = vertex2;
     this.weight = Math.random();
-
-    // Whenever edge gets created, make 2 vertices neighbors
-    if (!vertex1.edgeNeighbors.includes(vertex2)) {
-      vertex1.edgeNeighbors.push(vertex2);
-    }
-    if (!vertex2.edgeNeighbors.includes(vertex1)) {
-      vertex2.edgeNeighbors.push(vertex1);
-    }
   }
 
   render(ctx, color) {
