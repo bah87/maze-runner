@@ -179,8 +179,10 @@ var GenerateMaze = function () {
     this.allEdges = new _prims2.default(this.grid).generate();
     this.startPos = this.grid.startPos;
     this.goalPos = this.grid.goalPos;
-    this.bfs = new _bfs2.default(this.startPos, this.goalPos, this.grid, this.ctx);
-    this.path = this.bfs.solve();
+    this.search = new _bfs2.default(this.startPos, this.goalPos, this.grid, this.ctx, "BFS");
+    var results = this.search.solve();
+    this.path = results[0];
+    this.visited = results[1];
     this.edges = [];
   }
 
@@ -219,6 +221,7 @@ var GenerateMaze = function () {
           requestAnimationFrame(animateCallback);
         } else {
           _this.renderEndpoints(_this.ctx);
+          _this.displayVisited(_this.ctx);
           _this.solve(_this.ctx);
         }
       };
@@ -226,19 +229,39 @@ var GenerateMaze = function () {
       animateCallback();
     }
   }, {
-    key: 'pathToEdges',
-    value: function pathToEdges() {
+    key: 'nodesToEdges',
+    value: function nodesToEdges(path) {
       var pathEdges = [];
-      for (var i = 1; i < this.path.length; i++) {
-        pathEdges.push(new _edge2.default(this.path[i - 1], this.path[i]));
+      for (var i = 1; i < path.length; i++) {
+        pathEdges.push(new _edge2.default(path[i - 1], path[i], true));
       }
 
       return pathEdges;
     }
   }, {
+    key: 'displayVisited',
+    value: function displayVisited(ctx) {
+      var visitedEdges = this.visited;
+      var renderedEdges = [];
+
+      var animateCallback = function animateCallback() {
+        if (visitedEdges.length > 0) {
+          renderedEdges.push(visitedEdges.shift());
+
+          renderedEdges.forEach(function (edge) {
+            edge.render(ctx, "pink");
+          });
+
+          setTimeout(animateCallback, 1000 / 60);
+        }
+      };
+
+      animateCallback();
+    }
+  }, {
     key: 'solve',
     value: function solve(ctx) {
-      var pathEdges = this.pathToEdges();
+      var pathEdges = this.nodesToEdges(this.path);
       var renderedEdges = [];
 
       var animateCallback = function animateCallback() {
@@ -249,7 +272,7 @@ var GenerateMaze = function () {
             edge.render(ctx, "blue");
           });
 
-          setTimeout(animateCallback, 1000);
+          setTimeout(animateCallback, 1000 / 20);
         }
       };
 
@@ -530,19 +553,20 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var Edge = function () {
-  function Edge(vertex1, vertex2) {
+  function Edge(vertex1, vertex2, search) {
     _classCallCheck(this, Edge);
 
     this.vertex1 = vertex1;
     this.vertex2 = vertex2;
     this.weight = Math.random();
+    this.search = search;
   }
 
   _createClass(Edge, [{
     key: "render",
     value: function render(ctx, color) {
       var mult = 20;
-      var lineWidth = 10;
+      var lineWidth = this.search ? 6 : 10;
       var x1 = this.vertex1.pos[1] * mult + 25;
       var x2 = this.vertex2.pos[1] * mult + 25;
       var y1 = this.vertex1.pos[0] * mult + 25;
@@ -595,27 +619,41 @@ var _node = __webpack_require__(0);
 
 var _node2 = _interopRequireDefault(_node);
 
+var _edge = __webpack_require__(6);
+
+var _edge2 = _interopRequireDefault(_edge);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var BreadthFirstSearch = function () {
-  function BreadthFirstSearch(startPos, goalPos, grid, ctx) {
-    _classCallCheck(this, BreadthFirstSearch);
+var BreadthOrDepthFirstSearch = function () {
+  function BreadthOrDepthFirstSearch(startPos, goalPos, grid, ctx, search) {
+    _classCallCheck(this, BreadthOrDepthFirstSearch);
 
     this.queue = [grid.array[startPos[0]][startPos[1]]];
-    this.visited = {};
+    this.visited = {
+      bool: new Array(Math.pow(grid.size, 2)).fill(false),
+      all: [],
+      save: []
+    };
     this.goalValue = goalPos[0] * grid.size + goalPos[1];
+    this.search = search;
   }
 
-  _createClass(BreadthFirstSearch, [{
+  _createClass(BreadthOrDepthFirstSearch, [{
     key: 'traverseGrid',
     value: function traverseGrid() {
       var _this = this;
 
       var _loop = function _loop() {
-        var current = _this.queue.shift();
-        _this.visited[current.value] = true;
+        var current = void 0;
+        if (_this.search === "DFS") {
+          current = _this.queue.pop();
+        } else {
+          current = _this.queue.shift();
+        }
+        _this.visited.bool[current.value] = true;
         if (current.value === _this.goalValue) {
           return {
             v: current
@@ -623,7 +661,10 @@ var BreadthFirstSearch = function () {
         }
 
         current.edgeNeighbors.forEach(function (neighbor) {
-          if (!_this.queue.includes(neighbor) && !_this.visited[neighbor.value]) {
+          if (!_this.queue.includes(neighbor) && !_this.visited.bool[neighbor.value]) {
+
+            _this.visited.all.push(new _edge2.default(current, neighbor, true));
+
             neighbor.parent = current;
             _this.queue.push(neighbor);
           }
@@ -640,11 +681,12 @@ var BreadthFirstSearch = function () {
     key: 'traversePath',
     value: function traversePath() {
       var path = [this.traverseGrid()];
+
       while (path.slice(-1)[0].parent) {
         path.push(path.slice(-1)[0].parent);
       }
 
-      return path;
+      return [path, this.visited.arr.slice(1)];
     }
   }, {
     key: 'solve',
@@ -653,10 +695,10 @@ var BreadthFirstSearch = function () {
     }
   }]);
 
-  return BreadthFirstSearch;
+  return BreadthOrDepthFirstSearch;
 }();
 
-exports.default = BreadthFirstSearch;
+exports.default = BreadthOrDepthFirstSearch;
 
 /***/ })
 /******/ ]);

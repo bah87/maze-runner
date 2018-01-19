@@ -1,7 +1,7 @@
 import Grid from './grid';
 import Prims from './prims';
 import Edge from './edge';
-import BreadthFirstSearch from './bfs';
+import BreadthOrDepthFirstSearch from './bfs';
 
 class GenerateMaze {
   constructor(canvasEl, size) {
@@ -12,10 +12,12 @@ class GenerateMaze {
     this.allEdges = new Prims(this.grid).generate();
     this.startPos = this.grid.startPos;
     this.goalPos = this.grid.goalPos;
-    this.bfs = new BreadthFirstSearch(
-      this.startPos, this.goalPos, this.grid, this.ctx
+    this.search = new BreadthOrDepthFirstSearch(
+      this.startPos, this.goalPos, this.grid, this.ctx, "BFS"
     );
-    this.path = this.bfs.solve();
+    let results = this.search.solve();
+    this.path = results[0];
+    this.visited = results[1];
     this.edges = [];
   }
 
@@ -48,6 +50,7 @@ class GenerateMaze {
         requestAnimationFrame(animateCallback);
       } else {
         this.renderEndpoints(this.ctx);
+        this.displayVisited(this.ctx);
         this.solve(this.ctx);
       }
     };
@@ -55,17 +58,36 @@ class GenerateMaze {
     animateCallback();
   }
 
-  pathToEdges() {
+  nodesToEdges(path) {
     const pathEdges = [];
-    for (let i = 1; i < this.path.length; i++) {
-      pathEdges.push(new Edge(this.path[i-1], this.path[i]));
+    for (let i = 1; i < path.length; i++) {
+      pathEdges.push(new Edge(path[i-1], path[i], true));
     }
 
     return pathEdges;
   }
 
+  displayVisited(ctx) {
+    const visitedEdges = this.visited;
+    const renderedEdges = [];
+
+    const animateCallback = () => {
+      if (visitedEdges.length > 0) {
+        renderedEdges.push(visitedEdges.shift());
+
+        renderedEdges.forEach(edge => {
+          edge.render(ctx, "pink");
+        });
+
+        setTimeout(animateCallback, 1000/60);
+      }
+    };
+
+    animateCallback();
+  }
+
   solve(ctx) {
-    const pathEdges = this.pathToEdges();
+    const pathEdges = this.nodesToEdges(this.path);
     const renderedEdges = [];
 
     const animateCallback = () => {
@@ -76,7 +98,7 @@ class GenerateMaze {
           edge.render(ctx, "blue");
         });
 
-        setTimeout(animateCallback, 1000);
+        setTimeout(animateCallback, 1000/20);
       }
     };
 
