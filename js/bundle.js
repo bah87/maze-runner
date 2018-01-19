@@ -91,11 +91,12 @@ var Node = function () {
 
   _createClass(Node, [{
     key: "calcHeuristic",
-    value: function calcHeuristic(goalPos, costSoFar) {
+    value: function calcHeuristic(fromNode) {
       // This is the heuristic for A*
       // Setting this.weight to result to be compatible with binary heap
-      this.costSoFar = costSoFar;
-      this.weight = this.costSoFar + this.costToPos(goalPos);
+      this.costSoFar = fromNode.costSoFar + fromNode.costToPos(this.pos);
+      this.goalPos = fromNode.goalPos;
+      this.weight = this.costSoFar + this.costToPos(fromNode.goalPos);
       return this.weight;
     }
   }, {
@@ -324,7 +325,7 @@ var GenerateMaze = function () {
             edge.render(ctx, "orange");
           });
 
-          setTimeout(animateCallback, 1000 / 20);
+          setTimeout(animateCallback, 1000 / 60);
         } else {
           _this.solve(_this.ctx);
         }
@@ -819,7 +820,6 @@ var AStar = function () {
       pq: new _binary_heap2.default(),
       save: []
     };
-    this.goalPos = this.grid.goalPos;
     this.goalValue = grid.goalPos[0] * grid.width + grid.goalPos[1];
     this.setupPriorityQueue();
   }
@@ -832,7 +832,9 @@ var AStar = function () {
           startX = _grid$startPos[1];
 
       var startNode = this.grid.array[startY][startX];
-      startNode.calcHeuristic(this.goalPos, 0);
+      startNode.costSoFar = 0;
+      startNode.goalPos = this.grid.goalPos;
+      startNode.calcHeuristic(startNode);
       startNode.parent = null;
       this.visited.bool[startNode.value] = true;
       this.pq.put(startNode);
@@ -854,11 +856,11 @@ var AStar = function () {
         }
 
         current.edgeNeighbors.forEach(function (neighbor) {
-          var newCost = current.costSoFar + current.costToPos(neighbor.pos);
+          var newCost = neighbor.calcHeuristic(current);
 
-          if (!_this.visited.bool[neighbor.value] || newCost < neighbor.costSoFar) {
+          if (!_this.visited.bool[neighbor.value] || newCost < neighbor.weight) {
             _this.visited.bool[neighbor.value] = true;
-            neighbor.calcHeuristic(_this.goalPos, newCost);
+            neighbor.weight = newCost;
             neighbor.parent = current;
             _this.pq.put(neighbor);
 

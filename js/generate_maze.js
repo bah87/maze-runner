@@ -107,7 +107,7 @@ class GenerateMaze {
           edge.render(ctx, "orange");
         });
 
-        setTimeout(animateCallback, 1000/20);
+        setTimeout(animateCallback, 1000/60);
       } else {
         this.solve(this.ctx);
       }
