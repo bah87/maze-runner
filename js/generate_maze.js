@@ -15,7 +15,7 @@ class GenerateMaze {
 
   setup(width, height, search) {
     this.grid = new Grid(width, height);
-    this.allEdges = new Prims(this.grid).generate();
+    // this.allEdges = new Prims(this.grid).generate();
     this.startPos = this.grid.startPos;
     this.goalPos = this.grid.goalPos;
 
@@ -34,15 +34,15 @@ class GenerateMaze {
     // let results = this.search.solve();
     // this.path = results[0];
     // this.visited = results[1];
-    // this.edges = this.allEdges;
+    // this.savedEdges = this.allEdges;
     // this.edges = [];
   }
 
-  render() {
+  render(edges) {
     this.ctx.clearRect(10, 10, this.width, this.height);
     this.ctx.fillStyle = "black";
     this.ctx.fillRect(10, 10, this.width, this.height);
-    this.edges.forEach(edge => {
+    edges.forEach(edge => {
       edge.render(this.ctx, "white");
     });
   }
@@ -67,11 +67,20 @@ class GenerateMaze {
     // this.ctx.fillRect(goalX, goalY, 10, 10);
   }
 
+  quickRegen() {
+    this.render(this.allEdges);
+  }
+
   generate() {
+    this.allEdges = new Prims(this.grid).generate();
+    this.edges = [];
+    let i = 0;
+
     const animateCallback = () => {
-      if (this.allEdges.length > 0) {
-        this.edges.push(this.allEdges.shift());
-        this.render(this.ctx);
+      if (i < this.allEdges.length) {
+        this.edges.push(this.allEdges[i]);
+        i++;
+        this.render(this.edges);
         requestAnimationFrame(animateCallback);
       } else {
         this.renderEndpoints(this.ctx);
@@ -111,7 +120,6 @@ class GenerateMaze {
     let results = this.search.solve();
     this.path = results[0];
     this.visited = results[1];
-    this.edges = [];
 
     const visitedEdges = this.visited;
     const renderedEdges = [];

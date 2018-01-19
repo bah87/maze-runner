@@ -245,7 +245,7 @@ var GenerateMaze = function () {
     key: 'setup',
     value: function setup(width, height, search) {
       this.grid = new _grid2.default(width, height);
-      this.allEdges = new _prims2.default(this.grid).generate();
+      // this.allEdges = new Prims(this.grid).generate();
       this.startPos = this.grid.startPos;
       this.goalPos = this.grid.goalPos;
 
@@ -264,18 +264,18 @@ var GenerateMaze = function () {
       // let results = this.search.solve();
       // this.path = results[0];
       // this.visited = results[1];
-      // this.edges = this.allEdges;
+      // this.savedEdges = this.allEdges;
       // this.edges = [];
     }
   }, {
     key: 'render',
-    value: function render() {
+    value: function render(edges) {
       var _this = this;
 
       this.ctx.clearRect(10, 10, this.width, this.height);
       this.ctx.fillStyle = "black";
       this.ctx.fillRect(10, 10, this.width, this.height);
-      this.edges.forEach(function (edge) {
+      edges.forEach(function (edge) {
         edge.render(_this.ctx, "white");
       });
     }
@@ -301,14 +301,24 @@ var GenerateMaze = function () {
       // this.ctx.fillRect(goalX, goalY, 10, 10);
     }
   }, {
+    key: 'quickRegen',
+    value: function quickRegen() {
+      this.render(this.allEdges);
+    }
+  }, {
     key: 'generate',
     value: function generate() {
       var _this2 = this;
 
+      this.allEdges = new _prims2.default(this.grid).generate();
+      this.edges = [];
+      var i = 0;
+
       var animateCallback = function animateCallback() {
-        if (_this2.allEdges.length > 0) {
-          _this2.edges.push(_this2.allEdges.shift());
-          _this2.render(_this2.ctx);
+        if (i < _this2.allEdges.length) {
+          _this2.edges.push(_this2.allEdges[i]);
+          i++;
+          _this2.render(_this2.edges);
           requestAnimationFrame(animateCallback);
         } else {
           _this2.renderEndpoints(_this2.ctx);
@@ -352,7 +362,6 @@ var GenerateMaze = function () {
       var results = this.search.solve();
       this.path = results[0];
       this.visited = results[1];
-      this.edges = [];
 
       var visitedEdges = this.visited;
       var renderedEdges = [];
