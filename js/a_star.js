@@ -10,6 +10,7 @@ class AStar {
       pq: new BinaryMinHeap(),
       save: []
     };
+    this.goalPos = this.grid.goalPos;
     this.goalValue = grid.goalPos[0] * grid.width + grid.goalPos[1];
     this.setupPriorityQueue();
   }
@@ -17,8 +18,7 @@ class AStar {
   setupPriorityQueue() {
     let [startY, startX] = this.grid.startPos;
     let startNode = this.grid.array[startY][startX];
-    startNode.goalPos = this.grid.goalPos;
-    startNode.calcHeuristic(startNode, 0);
+    startNode.calcHeuristic(this.goalPos, 0);
     startNode.parent = null;
     this.visited.bool[startNode.value] = true;
     this.pq.put(startNode);
@@ -35,12 +35,12 @@ class AStar {
       }
 
       current.edgeNeighbors.forEach(neighbor => {
-        let newCost = current.costSoFar + current.costToPos(neighbor);
+        let newCost = current.costSoFar + current.costToPos(neighbor.pos);
 
         if (!this.visited.bool[neighbor.value]
             || newCost < neighbor.costSoFar) {
           this.visited.bool[neighbor.value] = true;
-          neighbor.calcHeuristic(current, newCost);
+          neighbor.calcHeuristic(this.goalPos, newCost);
           neighbor.parent = current;
           this.pq.put(neighbor);
 

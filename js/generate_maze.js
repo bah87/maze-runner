@@ -49,14 +49,22 @@ class GenerateMaze {
 
   renderEndpoints(ctx) {
     ctx.fillStyle = "green";
-    let startX = this.startPos[1] * 20 + 20;
-    let startY = this.startPos[0] * 20 + 20;
-    ctx.fillRect(startX, startY, 10, 10);
+    let startX = this.startPos[1] * 20 + 25;
+    let startY = this.startPos[0] * 20 + 25;
+    ctx.beginPath();
+    ctx.arc(startX, startY, 10, 0, Math.PI*2, true);
+    ctx.closePath();
+    ctx.fill();
+    // ctx.fillRect(startX, startY, 10, 10);
 
     ctx.fillStyle = "red";
-    let goalX = this.goalPos[1] * 20 + 20;
-    let goalY = this.goalPos[0] * 20 + 20;
-    ctx.fillRect(goalX, goalY, 10, 10);
+    let goalX = this.goalPos[1] * 20 + 25;
+    let goalY = this.goalPos[0] * 20 + 25;
+    ctx.beginPath();
+    ctx.arc(goalX, goalY, 10, 0, Math.PI*2, true);
+    ctx.closePath();
+    ctx.fill();
+    // ctx.fillRect(goalX, goalY, 10, 10);
   }
 
   generate() {
@@ -99,7 +107,7 @@ class GenerateMaze {
           edge.render(ctx, "orange");
         });
 
-        setTimeout(animateCallback, 1000/120);
+        setTimeout(animateCallback, 1000/20);
       } else {
         this.solve(this.ctx);
       }

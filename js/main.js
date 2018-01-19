@@ -6,7 +6,7 @@ $(() => {
   let height = 30;
   canvasEl.height = height * 20 + 40;
   canvasEl.width = width * 20 + 40;
-  let search = "DFS";
+  let search = "A*";
   const maze = new GenerateMaze(canvasEl, width, height, search);
   maze.generate(canvasEl);
 
