@@ -87,7 +87,6 @@ var Node = function () {
     this.pos = pos;
     this.value = value;
     this.edgeNeighbors = [];
-    // this.costSoFar = 0;
   }
 
   _createClass(Node, [{
@@ -95,7 +94,6 @@ var Node = function () {
     value: function calcHeuristic(fromNode, costSoFar) {
       // This is the heuristic for A*
       // Setting this.weight to result to be compatible with binary heap
-      // this.costSoFar = fromNode.costSoFar + this.costToPos(fromNode);
       this.costSoFar = costSoFar;
       this.weight = this.costSoFar + this.costToPos(fromNode.goalPos);
       return this.weight;
@@ -103,14 +101,10 @@ var Node = function () {
   }, {
     key: "costToPos",
     value: function costToPos(pos) {
-      var _pos = _slicedToArray(this.pos, 2),
-          x1 = _pos[0],
-          y1 = _pos[1];
-
-      var _pos2 = _slicedToArray(pos, 2),
-          x2 = _pos2[0],
-          y2 = _pos2[1];
-
+      var x1 = void 0,
+          y1 = this.pos;
+      var x2 = void 0,
+          y2 = pos;
       var aSquared = Math.pow(x2 - x1, 2);
       var bSquared = Math.pow(y2 - y1, 2);
       return Math.pow(aSquared + bSquared, 0.5);
@@ -120,9 +114,9 @@ var Node = function () {
     value: function neighbors() {
       var north = void 0;var east = void 0;var west = void 0;var south = void 0;
 
-      var _pos3 = _slicedToArray(this.pos, 2),
-          y = _pos3[0],
-          x = _pos3[1];
+      var _pos = _slicedToArray(this.pos, 2),
+          y = _pos[0],
+          x = _pos[1];
 
       if (this.grid.array[y - 1]) {
         north = this.grid.array[y - 1][x];
@@ -162,11 +156,12 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 $(function () {
   var canvasEl = document.getElementsByTagName("canvas")[0];
-  var width = 50;
-  var height = 30;
+  var width = 10;
+  var height = 10;
   canvasEl.height = height * 20 + 40;
   canvasEl.width = width * 20 + 40;
-  var maze = new _generate_maze2.default(canvasEl, width, height);
+  var search = "A*";
+  var maze = new _generate_maze2.default(canvasEl, width, height, search);
   maze.generate(canvasEl);
 });
 
@@ -195,6 +190,10 @@ var _edge = __webpack_require__(6);
 
 var _edge2 = _interopRequireDefault(_edge);
 
+var _a_star = __webpack_require__(9);
+
+var _a_star2 = _interopRequireDefault(_a_star);
+
 var _bfs = __webpack_require__(7);
 
 var _bfs2 = _interopRequireDefault(_bfs);
@@ -204,24 +203,42 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var GenerateMaze = function () {
-  function GenerateMaze(canvasEl, width, height) {
+  function GenerateMaze(canvasEl, width, height, search) {
     _classCallCheck(this, GenerateMaze);
 
     this.width = width * 20 + 10;
     this.height = height * 20 + 10;
     this.ctx = canvasEl.getContext("2d");
-    this.grid = new _grid2.default(width, height);
-    this.allEdges = new _prims2.default(this.grid).generate();
-    this.startPos = this.grid.startPos;
-    this.goalPos = this.grid.goalPos;
-    this.search = new _bfs2.default(this.grid, "DFS");
-    var results = this.search.solve();
-    this.path = results[0];
-    this.visited = results[1];
-    this.edges = [];
+
+    this.setup(width, height, search);
   }
 
   _createClass(GenerateMaze, [{
+    key: 'setup',
+    value: function setup(width, height, search) {
+      this.grid = new _grid2.default(width, height);
+      this.allEdges = new _prims2.default(this.grid).generate();
+      this.startPos = this.grid.startPos;
+      this.goalPos = this.grid.goalPos;
+
+      switch (search) {
+        case "BFS":
+          this.search = new _bfs2.default(this.grid, "BFS");
+          break;
+        case "DFS":
+          this.search = new _bfs2.default(this.grid, "DFS");
+          break;
+        case "A*":
+          this.search = new _a_star2.default(this.grid);
+          break;
+      }
+
+      var results = this.search.solve();
+      this.path = results[0];
+      this.visited = results[1];
+      this.edges = [];
+    }
+  }, {
     key: 'render',
     value: function render(ctx) {
       ctx.clearRect(10, 10, this.width, this.height);
@@ -491,6 +508,11 @@ var BinaryMinHeap = function () {
   }
 
   _createClass(BinaryMinHeap, [{
+    key: "length",
+    value: function length() {
+      return this.pq.length;
+    }
+  }, {
     key: "put",
     value: function put(edge) {
       this.pq.push(edge);
@@ -735,6 +757,118 @@ var BreadthOrDepthFirstSearch = function () {
 }();
 
 exports.default = BreadthOrDepthFirstSearch;
+
+/***/ }),
+/* 8 */,
+/* 9 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _binary_heap = __webpack_require__(5);
+
+var _binary_heap2 = _interopRequireDefault(_binary_heap);
+
+var _edge = __webpack_require__(6);
+
+var _edge2 = _interopRequireDefault(_edge);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var AStar = function () {
+  function AStar(grid) {
+    _classCallCheck(this, AStar);
+
+    this.pq = new _binary_heap2.default();
+    this.grid = grid;
+    this.visited = new Array(grid.width * grid.height).fill(false);
+    this.goalValue = grid.goalPos[0] * grid.width + grid.goalPos[1];
+    this.setupPriorityQueue();
+  }
+
+  _createClass(AStar, [{
+    key: 'setupPriorityQueue',
+    value: function setupPriorityQueue() {
+      var _grid$startPos = _slicedToArray(this.grid.startPos, 2),
+          startY = _grid$startPos[0],
+          startX = _grid$startPos[1];
+
+      var startNode = this.grid.array[startY][startX];
+      startNode.goalPos = this.grid.goalPos;
+      startNode.calcHeuristic(startNode, 0);
+      startNode.parent = null;
+      this.visited[startNode.value] = true;
+      this.pq.put(startNode);
+    }
+  }, {
+    key: 'traverseGrid',
+    value: function traverseGrid() {
+      var _this = this;
+
+      var _loop = function _loop() {
+        var current = _this.pq.take();
+
+        if (current.value === _this.goalValue) {
+          return {
+            v: current
+          };
+        }
+
+        current.edgeNeighbors.forEach(function (neighbor) {
+          var newCost = current.costSoFar + current.costToPos(neighbor);
+
+          if (!_this.visited[neighbor.value] || newCost < neighbor.costSoFar) {
+            _this.visited[neighbor.value] = true;
+            neighbor.calcHeuristic(current, newCost);
+            neighbor.parent = current;
+            _this.pq.put(neighbor);
+          }
+        });
+      };
+
+      while (this.pq.length() > 1) {
+        var _ret = _loop();
+
+        if ((typeof _ret === 'undefined' ? 'undefined' : _typeof(_ret)) === "object") return _ret.v;
+      }
+    }
+  }, {
+    key: 'traversePath',
+    value: function traversePath() {
+      var path = [this.traverseGrid()];
+
+      while (path.slice(-1)[0].parent) {
+        path.push(path.slice(-1)[0].parent);
+      }
+
+      console.log(path);
+
+      return [path, this.visited.save.slice(1)];
+    }
+  }, {
+    key: 'solve',
+    value: function solve() {
+      return this.traversePath();
+    }
+  }]);
+
+  return AStar;
+}();
+
+exports.default = AStar;
 
 /***/ })
 /******/ ]);

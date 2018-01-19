@@ -3,21 +3,19 @@ class Node {
     this.pos = pos;
     this.value = value;
     this.edgeNeighbors = [];
-    // this.costSoFar = 0;
   }
 
   calcHeuristic(fromNode, costSoFar) {
     // This is the heuristic for A*
     // Setting this.weight to result to be compatible with binary heap
-    // this.costSoFar = fromNode.costSoFar + this.costToPos(fromNode);
     this.costSoFar = costSoFar;
     this.weight = this.costSoFar + this.costToPos(fromNode.goalPos);
     return this.weight;
   }
 
   costToPos(pos) {
-    let [x1, y1] = this.pos;
-    let [x2, y2] = pos;
+    let x1, y1 = this.pos;
+    let x2, y2 = pos;
     let aSquared = Math.pow(x2 - x1, 2);
     let bSquared = Math.pow(y2 - y1, 2);
     return Math.pow(aSquared + bSquared, 0.5);

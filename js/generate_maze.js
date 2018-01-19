@@ -1,18 +1,36 @@
 import Grid from './grid';
 import Prims from './prims';
 import Edge from './edge';
+import AStar from './a_star';
 import BreadthOrDepthFirstSearch from './bfs';
 
 class GenerateMaze {
-  constructor(canvasEl, width, height) {
+  constructor(canvasEl, width, height, search) {
     this.width = width * 20 + 10;
     this.height = height * 20 + 10;
     this.ctx = canvasEl.getContext("2d");
+
+    this.setup(width, height, search);
+  }
+
+  setup(width, height, search) {
     this.grid = new Grid(width, height);
     this.allEdges = new Prims(this.grid).generate();
     this.startPos = this.grid.startPos;
     this.goalPos = this.grid.goalPos;
-    this.search = new BreadthOrDepthFirstSearch(this.grid, "DFS");
+
+    switch (search) {
+      case "BFS":
+        this.search = new BreadthOrDepthFirstSearch(this.grid, "BFS");
+        break;
+      case "DFS":
+        this.search = new BreadthOrDepthFirstSearch(this.grid, "DFS");
+        break;
+      case "A*":
+        this.search = new AStar(this.grid);
+        break;
+    }
+
     let results = this.search.solve();
     this.path = results[0];
     this.visited = results[1];

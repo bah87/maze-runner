@@ -3,6 +3,10 @@ class BinaryMinHeap {
     this.pq = [null];
   }
 
+  length() {
+    return this.pq.length;
+  }
+
   put(edge) {
     this.pq.push(edge);
     if (this.pq.length > 2) {
