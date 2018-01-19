@@ -79,20 +79,59 @@ class GenerateMaze {
     return pathEdges;
   }
 
-  displayVisited(searchType) {
+  quickDisplay(searchType) {
+    let path; let visited;
     switch (searchType) {
       case "BFS":
-        this.search = new BreadthOrDepthFirstSearch(this.grid, "BFS");
+        // this.search = new BreadthOrDepthFirstSearch(this.grid, "BFS");
+        path = this.nodesToEdges(this.pathBFS);
+        visited = this.visitedBFS;
         break;
       case "DFS":
-        this.search = new BreadthOrDepthFirstSearch(this.grid, "DFS");
+        // this.search = new BreadthOrDepthFirstSearch(this.grid, "DFS");
+        path = this.nodesToEdges(this.pathDFS);
+        visited = this.visitedDFS;
         break;
       case "A*":
-        this.search = new AStar(this.grid);
+        // this.search = new AStar(this.grid);
+        path = this.nodesToEdges(this.pathAstar);
+        visited = this.visitedAstar;
         break;
     }
 
-    let results = this.search.solve();
+    visited.forEach(edge => {
+      edge.render(this.ctx, "orange");
+    });
+
+    path.forEach(edge => {
+      edge.render(this.ctx, "blue");
+    });
+
+    this.renderEndpoints(this.ctx);
+  }
+
+  displayVisited(searchType) {
+    let results;
+    switch (searchType) {
+      case "BFS":
+        this.search = new BreadthOrDepthFirstSearch(this.grid, "BFS");
+        results = this.search.solve();
+        this.pathBFS = results[0];
+        this.visitedBFS = results[1];
+        break;
+      case "DFS":
+        this.search = new BreadthOrDepthFirstSearch(this.grid, "DFS");
+        results = this.search.solve();
+        this.pathDFS = results[0];
+        this.visitedDFS = results[1];
+        break;
+      case "A*":
+        this.search = new AStar(this.grid);
+        results = this.search.solve();
+        this.pathAstar = results[0];
+        this.visitedAstar = results[1];
+        break;
+    }
     this.path = results[0];
     this.visited = results[1];
 

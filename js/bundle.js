@@ -167,28 +167,49 @@ $(function () {
   canvasEl.width = width * 20 + 40;
   var maze = new _generate_maze2.default(canvasEl, width, height);
   maze.generate(canvasEl);
+  var bfsClicked = false;
+  var dfsClicked = false;
+  var astarClicked = false;
 
   $(".search-btns").append("<button class=maze-regen>Regenerate Maze</button>");
   $(".maze-regen").on("click", function () {
+    bfsClicked = false;
+    dfsClicked = false;
+    astarClicked = false;
     maze.generate(canvasEl);
   });
 
   $(".search-btns").append("<button class=bfs>BFS</button>");
   $(".bfs").on("click", function () {
     maze.quickRegen();
-    maze.displayVisited("BFS");
+    if (bfsClicked) {
+      maze.quickDisplay("BFS");
+    } else {
+      bfsClicked = true;
+      maze.displayVisited("BFS");
+    }
   });
 
   $(".search-btns").append("<button class=dfs>DFS</button>");
   $(".dfs").on("click", function () {
     maze.quickRegen();
-    maze.displayVisited("DFS");
+    if (dfsClicked) {
+      maze.quickDisplay("DFS");
+    } else {
+      dfsClicked = true;
+      maze.displayVisited("DFS");
+    }
   });
 
   $(".search-btns").append("<button class=astar>A*</button>");
   $(".astar").on("click", function () {
     maze.quickRegen();
-    maze.displayVisited("A*");
+    if (astarClicked) {
+      maze.quickDisplay("A*");
+    } else {
+      astarClicked = true;
+      maze.displayVisited("A*");
+    }
   });
 });
 
@@ -317,23 +338,65 @@ var GenerateMaze = function () {
       return pathEdges;
     }
   }, {
-    key: 'displayVisited',
-    value: function displayVisited(searchType) {
+    key: 'quickDisplay',
+    value: function quickDisplay(searchType) {
       var _this3 = this;
 
+      var path = void 0;var visited = void 0;
       switch (searchType) {
         case "BFS":
-          this.search = new _bfs2.default(this.grid, "BFS");
+          // this.search = new BreadthOrDepthFirstSearch(this.grid, "BFS");
+          path = this.nodesToEdges(this.pathBFS);
+          visited = this.visitedBFS;
           break;
         case "DFS":
-          this.search = new _bfs2.default(this.grid, "DFS");
+          // this.search = new BreadthOrDepthFirstSearch(this.grid, "DFS");
+          path = this.nodesToEdges(this.pathDFS);
+          visited = this.visitedDFS;
           break;
         case "A*":
-          this.search = new _a_star2.default(this.grid);
+          // this.search = new AStar(this.grid);
+          path = this.nodesToEdges(this.pathAstar);
+          visited = this.visitedAstar;
           break;
       }
 
-      var results = this.search.solve();
+      visited.forEach(function (edge) {
+        edge.render(_this3.ctx, "orange");
+      });
+
+      path.forEach(function (edge) {
+        edge.render(_this3.ctx, "blue");
+      });
+
+      this.renderEndpoints(this.ctx);
+    }
+  }, {
+    key: 'displayVisited',
+    value: function displayVisited(searchType) {
+      var _this4 = this;
+
+      var results = void 0;
+      switch (searchType) {
+        case "BFS":
+          this.search = new _bfs2.default(this.grid, "BFS");
+          results = this.search.solve();
+          this.pathBFS = results[0];
+          this.visitedBFS = results[1];
+          break;
+        case "DFS":
+          this.search = new _bfs2.default(this.grid, "DFS");
+          results = this.search.solve();
+          this.pathDFS = results[0];
+          this.visitedDFS = results[1];
+          break;
+        case "A*":
+          this.search = new _a_star2.default(this.grid);
+          results = this.search.solve();
+          this.pathAstar = results[0];
+          this.visitedAstar = results[1];
+          break;
+      }
       this.path = results[0];
       this.visited = results[1];
 
@@ -345,13 +408,13 @@ var GenerateMaze = function () {
           renderedEdges.push(visitedEdges.shift());
 
           renderedEdges.forEach(function (edge) {
-            edge.render(_this3.ctx, "orange");
+            edge.render(_this4.ctx, "orange");
           });
-          _this3.renderEndpoints(_this3.ctx);
+          _this4.renderEndpoints(_this4.ctx);
 
           requestAnimationFrame(animateCallback);
         } else {
-          _this3.solve();
+          _this4.solve();
         }
       };
 
@@ -360,7 +423,7 @@ var GenerateMaze = function () {
   }, {
     key: 'solve',
     value: function solve() {
-      var _this4 = this;
+      var _this5 = this;
 
       var pathEdges = this.nodesToEdges(this.path);
       var renderedEdges = [];
@@ -370,7 +433,7 @@ var GenerateMaze = function () {
           renderedEdges.push(pathEdges.shift());
 
           renderedEdges.forEach(function (edge) {
-            edge.render(_this4.ctx, "blue");
+            edge.render(_this5.ctx, "blue");
           });
 
           requestAnimationFrame(animateCallback);
