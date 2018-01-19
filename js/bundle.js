@@ -319,7 +319,8 @@ var GenerateMaze = function () {
           _this2.edges.push(_this2.allEdges[i]);
           i++;
           _this2.render(_this2.edges);
-          requestAnimationFrame(animateCallback);
+
+          setTimeout(animateCallback, 1);
         } else {
           _this2.renderEndpoints(_this2.ctx);
         }
@@ -345,21 +346,20 @@ var GenerateMaze = function () {
       var path = void 0;var visited = void 0;
       switch (searchType) {
         case "BFS":
-          // this.search = new BreadthOrDepthFirstSearch(this.grid, "BFS");
           path = this.nodesToEdges(this.pathBFS);
           visited = this.visitedBFS;
           break;
         case "DFS":
-          // this.search = new BreadthOrDepthFirstSearch(this.grid, "DFS");
           path = this.nodesToEdges(this.pathDFS);
           visited = this.visitedDFS;
           break;
         case "A*":
-          // this.search = new AStar(this.grid);
           path = this.nodesToEdges(this.pathAstar);
           visited = this.visitedAstar;
           break;
       }
+      console.log(path);
+      console.log(visited);
 
       visited.forEach(function (edge) {
         edge.render(_this3.ctx, "orange");
@@ -382,19 +382,19 @@ var GenerateMaze = function () {
           this.search = new _bfs2.default(this.grid, "BFS");
           results = this.search.solve();
           this.pathBFS = results[0];
-          this.visitedBFS = results[1];
+          this.visitedBFS = results[1].slice();
           break;
         case "DFS":
           this.search = new _bfs2.default(this.grid, "DFS");
           results = this.search.solve();
           this.pathDFS = results[0];
-          this.visitedDFS = results[1];
+          this.visitedDFS = results[1].slice();
           break;
         case "A*":
           this.search = new _a_star2.default(this.grid);
           results = this.search.solve();
           this.pathAstar = results[0];
-          this.visitedAstar = results[1];
+          this.visitedAstar = results[1].slice();
           break;
       }
       this.path = results[0];
@@ -412,7 +412,7 @@ var GenerateMaze = function () {
           });
           _this4.renderEndpoints(_this4.ctx);
 
-          requestAnimationFrame(animateCallback);
+          setTimeout(animateCallback, 1);
         } else {
           _this4.solve();
         }
@@ -436,7 +436,7 @@ var GenerateMaze = function () {
             edge.render(_this5.ctx, "blue");
           });
 
-          requestAnimationFrame(animateCallback);
+          setTimeout(animateCallback, 1);
         }
       };
 
