@@ -273,7 +273,7 @@ var GenerateMaze = function () {
       var _this = this;
 
       this.ctx.clearRect(10, 10, this.width, this.height);
-      this.ctx.fillStyle = "black";
+      this.ctx.fillStyle = "rgb(35, 35, 35)";
       this.ctx.fillRect(10, 10, this.width, this.height);
       edges.forEach(function (edge) {
         edge.render(_this.ctx, "white");

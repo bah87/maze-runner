@@ -20,7 +20,7 @@ class GenerateMaze {
 
   render(edges) {
     this.ctx.clearRect(10, 10, this.width, this.height);
-    this.ctx.fillStyle = "black";
+    this.ctx.fillStyle = "rgb(35, 35, 35)";
     this.ctx.fillRect(10, 10, this.width, this.height);
     edges.forEach(edge => {
       edge.render(this.ctx, "white");
