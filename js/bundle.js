@@ -181,7 +181,7 @@ var GenerateMaze = function () {
     this.allEdges = new _prims2.default(this.grid).generate();
     this.startPos = this.grid.startPos;
     this.goalPos = this.grid.goalPos;
-    this.search = new _bfs2.default(this.startPos, this.goalPos, this.grid, this.ctx, "DFS");
+    this.search = new _bfs2.default(this.grid, "DFS");
     var results = this.search.solve();
     this.path = results[0];
     this.visited = results[1];
@@ -630,17 +630,17 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var BreadthOrDepthFirstSearch = function () {
-  function BreadthOrDepthFirstSearch(startPos, goalPos, grid, ctx, search) {
+  function BreadthOrDepthFirstSearch(grid, searchType) {
     _classCallCheck(this, BreadthOrDepthFirstSearch);
 
-    this.queue = [grid.array[startPos[0]][startPos[1]]];
+    this.queue = [grid.array[grid.startPos[0]][grid.startPos[1]]];
     this.visited = {
       bool: new Array(grid.width * grid.height).fill(false),
       all: [],
       save: []
     };
-    this.goalValue = goalPos[0] * grid.width + goalPos[1];
-    this.search = search;
+    this.goalValue = grid.goalPos[0] * grid.width + grid.goalPos[1];
+    this.searchType = searchType;
   }
 
   _createClass(BreadthOrDepthFirstSearch, [{
@@ -650,7 +650,7 @@ var BreadthOrDepthFirstSearch = function () {
 
       var _loop = function _loop() {
         var current = void 0;
-        if (_this.search === "DFS") {
+        if (_this.searchType === "DFS") {
           current = _this.queue.pop();
         } else {
           current = _this.queue.shift();

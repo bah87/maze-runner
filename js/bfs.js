@@ -2,21 +2,21 @@ import Node from './node';
 import Edge from './edge';
 
 class BreadthOrDepthFirstSearch {
-  constructor(startPos, goalPos, grid, ctx, search) {
-    this.queue = [grid.array[startPos[0]][startPos[1]]];
+  constructor(grid, searchType) {
+    this.queue = [grid.array[grid.startPos[0]][grid.startPos[1]]];
     this.visited = {
       bool: new Array(grid.width * grid.height).fill(false),
       all: [],
       save: []
     };
-    this.goalValue = goalPos[0] * grid.width + goalPos[1];
-    this.search = search;
+    this.goalValue = grid.goalPos[0] * grid.width + grid.goalPos[1];
+    this.searchType = searchType;
   }
 
   traverseGrid() {
     while (this.queue.length > 0) {
       let current;
-      if (this.search === "DFS") {
+      if (this.searchType === "DFS") {
         current = this.queue.pop();
       } else {
         current = this.queue.shift();

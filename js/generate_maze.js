@@ -12,9 +12,7 @@ class GenerateMaze {
     this.allEdges = new Prims(this.grid).generate();
     this.startPos = this.grid.startPos;
     this.goalPos = this.grid.goalPos;
-    this.search = new BreadthOrDepthFirstSearch(
-      this.startPos, this.goalPos, this.grid, this.ctx, "DFS"
-    );
+    this.search = new BreadthOrDepthFirstSearch(this.grid, "DFS");
     let results = this.search.solve();
     this.path = results[0];
     this.visited = results[1];
