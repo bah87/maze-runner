@@ -237,7 +237,6 @@ var GenerateMaze = function () {
     this.width = width * 20 + 10;
     this.height = height * 20 + 10;
     this.ctx = canvasEl.getContext("2d");
-
     this.setup(width, height, search);
   }
 
@@ -245,27 +244,8 @@ var GenerateMaze = function () {
     key: 'setup',
     value: function setup(width, height, search) {
       this.grid = new _grid2.default(width, height);
-      // this.allEdges = new Prims(this.grid).generate();
       this.startPos = this.grid.startPos;
       this.goalPos = this.grid.goalPos;
-
-      // switch (search) {
-      //   case "BFS":
-      //     this.search = new BreadthOrDepthFirstSearch(this.grid, "BFS");
-      //     break;
-      //   case "DFS":
-      //     this.search = new BreadthOrDepthFirstSearch(this.grid, "DFS");
-      //     break;
-      //   case "A*":
-      //     this.search = new AStar(this.grid);
-      //     break;
-      // }
-
-      // let results = this.search.solve();
-      // this.path = results[0];
-      // this.visited = results[1];
-      // this.savedEdges = this.allEdges;
-      // this.edges = [];
     }
   }, {
     key: 'render',
@@ -289,7 +269,6 @@ var GenerateMaze = function () {
       this.ctx.arc(startX, startY, 10, 0, Math.PI * 2, true);
       this.ctx.closePath();
       this.ctx.fill();
-      // this.ctx.fillRect(startX, startY, 10, 10);
 
       this.ctx.fillStyle = "red";
       var goalX = this.goalPos[1] * 20 + 25;
@@ -298,12 +277,12 @@ var GenerateMaze = function () {
       this.ctx.arc(goalX, goalY, 10, 0, Math.PI * 2, true);
       this.ctx.closePath();
       this.ctx.fill();
-      // this.ctx.fillRect(goalX, goalY, 10, 10);
     }
   }, {
     key: 'quickRegen',
     value: function quickRegen() {
       this.render(this.allEdges);
+      this.renderEndpoints(this.ctx);
     }
   }, {
     key: 'generate',
@@ -322,15 +301,10 @@ var GenerateMaze = function () {
           requestAnimationFrame(animateCallback);
         } else {
           _this2.renderEndpoints(_this2.ctx);
-          // this.displayVisited(this.ctx);
         }
       };
 
       animateCallback();
-
-      // this.render(this.ctx);
-      // this.renderEndpoints(this.ctx);
-      // this.displayVisited(this.ctx);
     }
   }, {
     key: 'nodesToEdges',
@@ -373,8 +347,8 @@ var GenerateMaze = function () {
           renderedEdges.forEach(function (edge) {
             edge.render(_this3.ctx, "orange");
           });
+          _this3.renderEndpoints(_this3.ctx);
 
-          // setTimeout(animateCallback, 1000/60);
           requestAnimationFrame(animateCallback);
         } else {
           _this3.solve();
@@ -399,7 +373,6 @@ var GenerateMaze = function () {
             edge.render(_this4.ctx, "blue");
           });
 
-          // setTimeout(animateCallback, 1000/60);
           requestAnimationFrame(animateCallback);
         }
       };

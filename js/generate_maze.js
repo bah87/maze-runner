@@ -9,33 +9,13 @@ class GenerateMaze {
     this.width = width * 20 + 10;
     this.height = height * 20 + 10;
     this.ctx = canvasEl.getContext("2d");
-
     this.setup(width, height, search);
   }
 
   setup(width, height, search) {
     this.grid = new Grid(width, height);
-    // this.allEdges = new Prims(this.grid).generate();
     this.startPos = this.grid.startPos;
     this.goalPos = this.grid.goalPos;
-
-    // switch (search) {
-    //   case "BFS":
-    //     this.search = new BreadthOrDepthFirstSearch(this.grid, "BFS");
-    //     break;
-    //   case "DFS":
-    //     this.search = new BreadthOrDepthFirstSearch(this.grid, "DFS");
-    //     break;
-    //   case "A*":
-    //     this.search = new AStar(this.grid);
-    //     break;
-    // }
-
-    // let results = this.search.solve();
-    // this.path = results[0];
-    // this.visited = results[1];
-    // this.savedEdges = this.allEdges;
-    // this.edges = [];
   }
 
   render(edges) {
@@ -55,7 +35,6 @@ class GenerateMaze {
     this.ctx.arc(startX, startY, 10, 0, Math.PI*2, true);
     this.ctx.closePath();
     this.ctx.fill();
-    // this.ctx.fillRect(startX, startY, 10, 10);
 
     this.ctx.fillStyle = "red";
     let goalX = this.goalPos[1] * 20 + 25;
@@ -64,11 +43,11 @@ class GenerateMaze {
     this.ctx.arc(goalX, goalY, 10, 0, Math.PI*2, true);
     this.ctx.closePath();
     this.ctx.fill();
-    // this.ctx.fillRect(goalX, goalY, 10, 10);
   }
 
   quickRegen() {
     this.render(this.allEdges);
+    this.renderEndpoints(this.ctx);
   }
 
   generate() {
@@ -84,15 +63,10 @@ class GenerateMaze {
         requestAnimationFrame(animateCallback);
       } else {
         this.renderEndpoints(this.ctx);
-        // this.displayVisited(this.ctx);
       }
     };
 
     animateCallback();
-
-    // this.render(this.ctx);
-    // this.renderEndpoints(this.ctx);
-    // this.displayVisited(this.ctx);
   }
 
   nodesToEdges(path) {
@@ -131,8 +105,8 @@ class GenerateMaze {
         renderedEdges.forEach(edge => {
           edge.render(this.ctx, "orange");
         });
+        this.renderEndpoints(this.ctx);
 
-        // setTimeout(animateCallback, 1000/60);
         requestAnimationFrame(animateCallback);
       } else {
         this.solve();
@@ -153,8 +127,7 @@ class GenerateMaze {
         renderedEdges.forEach(edge => {
           edge.render(this.ctx, "blue");
         });
-
-        // setTimeout(animateCallback, 1000/60);
+        
         requestAnimationFrame(animateCallback);
       }
     };
