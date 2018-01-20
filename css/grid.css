@@ -6,6 +6,7 @@
 }
 
 .search-btns {
+  margin-top: 25px;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -29,8 +30,8 @@ h2 {
 
 .left {
   padding: 10px;
-  margin-left: 10px;
-  margin-top: 10px;
+  margin-left: 20px;
+  margin-top: 60px;
   width: 220px;
   height: 100%;
 }
@@ -68,6 +69,12 @@ button:hover {
   background-color: black;
 }
 
+button:focus {
+  background-color: grey;
+  outline: none;
+  box-shadow: 10px 5px 5px black;
+}
+
 .contact-me {
   display: flex;
   flex-direction: column;
@@ -82,7 +89,7 @@ button:hover {
 }
 
 .icon {
-  margin: 20px;
+  margin: 8px 20px;
   font-size: 30px;
 }
 

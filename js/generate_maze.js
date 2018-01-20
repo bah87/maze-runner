@@ -23,12 +23,12 @@ class GenerateMaze {
     this.ctx.fillStyle = "rgb(35, 35, 35)";
     this.ctx.fillRect(10, 10, this.width, this.height);
     edges.forEach(edge => {
-      edge.render(this.ctx, "white");
+      edge.render(this.ctx, "grey");
     });
   }
 
   renderEndpoints() {
-    this.ctx.fillStyle = "green";
+    this.ctx.fillStyle = "#3b721a";
     let startX = this.startPos[1] * 20 + 25;
     let startY = this.startPos[0] * 20 + 25;
     this.ctx.beginPath();
@@ -36,7 +36,7 @@ class GenerateMaze {
     this.ctx.closePath();
     this.ctx.fill();
 
-    this.ctx.fillStyle = "red";
+    this.ctx.fillStyle = "#871919";
     let goalX = this.goalPos[1] * 20 + 25;
     let goalY = this.goalPos[0] * 20 + 25;
     this.ctx.beginPath();
@@ -102,11 +102,11 @@ class GenerateMaze {
     }
 
     visited.forEach(edge => {
-      edge.render(this.ctx, "orange");
+      edge.render(this.ctx, "#cc700e");
     });
 
     path.forEach(edge => {
-      edge.render(this.ctx, "blue");
+      edge.render(this.ctx, "#1855a0");
     });
 
     this.renderEndpoints(this.ctx);
@@ -151,7 +151,7 @@ class GenerateMaze {
         renderedEdges.push(visitedEdges.shift());
 
         renderedEdges.forEach(edge => {
-          edge.render(this.ctx, "orange");
+          edge.render(this.ctx, "#cc700e");
         });
         this.renderEndpoints(this.ctx);
 
@@ -173,7 +173,7 @@ class GenerateMaze {
         renderedEdges.push(pathEdges.shift());
 
         renderedEdges.forEach(edge => {
-          edge.render(this.ctx, "blue");
+          edge.render(this.ctx, "#1855a0");
         });
 
         setTimeout(animateCallback, 1);

@@ -467,13 +467,13 @@ var GenerateMaze = function () {
       this.ctx.fillStyle = "rgb(35, 35, 35)";
       this.ctx.fillRect(10, 10, this.width, this.height);
       edges.forEach(function (edge) {
-        edge.render(_this.ctx, "white");
+        edge.render(_this.ctx, "grey");
       });
     }
   }, {
     key: 'renderEndpoints',
     value: function renderEndpoints() {
-      this.ctx.fillStyle = "green";
+      this.ctx.fillStyle = "#3b721a";
       var startX = this.startPos[1] * 20 + 25;
       var startY = this.startPos[0] * 20 + 25;
       this.ctx.beginPath();
@@ -481,7 +481,7 @@ var GenerateMaze = function () {
       this.ctx.closePath();
       this.ctx.fill();
 
-      this.ctx.fillStyle = "red";
+      this.ctx.fillStyle = "#871919";
       var goalX = this.goalPos[1] * 20 + 25;
       var goalY = this.goalPos[0] * 20 + 25;
       this.ctx.beginPath();
@@ -555,11 +555,11 @@ var GenerateMaze = function () {
       }
 
       visited.forEach(function (edge) {
-        edge.render(_this3.ctx, "orange");
+        edge.render(_this3.ctx, "#cc700e");
       });
 
       path.forEach(function (edge) {
-        edge.render(_this3.ctx, "blue");
+        edge.render(_this3.ctx, "#1855a0");
       });
 
       this.renderEndpoints(this.ctx);
@@ -607,7 +607,7 @@ var GenerateMaze = function () {
           renderedEdges.push(visitedEdges.shift());
 
           renderedEdges.forEach(function (edge) {
-            edge.render(_this4.ctx, "orange");
+            edge.render(_this4.ctx, "#cc700e");
           });
           _this4.renderEndpoints(_this4.ctx);
 
@@ -632,7 +632,7 @@ var GenerateMaze = function () {
           renderedEdges.push(pathEdges.shift());
 
           renderedEdges.forEach(function (edge) {
-            edge.render(_this5.ctx, "blue");
+            edge.render(_this5.ctx, "#1855a0");
           });
 
           setTimeout(animateCallback, 1);
