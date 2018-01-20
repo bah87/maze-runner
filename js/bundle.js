@@ -120,7 +120,7 @@ exports.default = Node;
 "use strict";
 
 
-var _view = __webpack_require__(2);
+var _view = __webpack_require__(10);
 
 var _view2 = _interopRequireDefault(_view);
 
@@ -136,80 +136,7 @@ $(function () {
 });
 
 /***/ }),
-/* 2 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _grid = __webpack_require__(3);
-
-var _grid2 = _interopRequireDefault(_grid);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var View = function () {
-  function View($el, algo) {
-    _classCallCheck(this, View);
-
-    this.$el = $el;
-    this.grid = new _grid2.default(25);
-    if (algo === "DFS") {
-      this.visited = Object.keys(this.grid.dfs.visited);
-      this.path = this.grid.dfs.solve();
-    } else if (algo === "BFS") {
-      this.visited = Object.keys(this.grid.bfs.visited);
-      this.path = this.grid.bfs.solve();
-    }
-  }
-
-  _createClass(View, [{
-    key: "makeGrid",
-    value: function makeGrid() {
-      var html = "";
-      for (var i = 0; i < this.grid.size; i++) {
-        html += "<ul>";
-        for (var j = 0; j < this.grid.size; j++) {
-          if (i === this.grid.startPos[0] && j === this.grid.startPos[1]) {
-            html += "<li class=start></li>";
-          } else if (i === this.grid.goalPos[0] && j === this.grid.goalPos[1]) {
-            html += "<li class=goal></li>";
-          } else if (this.path.includes(i * this.grid.size + j)) {
-            html += "<li class=path></li>";
-          } else if (this.visited.includes(i * this.grid.size + j)) {
-            html += "<li class=visited></li>";
-          } else if (this.grid.array[i][j]) {
-            html += "<li class=empty></li>";
-          } else {
-            html += "<li class=wall></li>";
-          }
-        }
-        html += "</ul>";
-      }
-
-      this.$el.html(html);
-    }
-  }, {
-    key: "render",
-    value: function render() {
-      this.makeGrid();
-    }
-  }]);
-
-  return View;
-}();
-
-exports.default = View;
-
-/***/ }),
+/* 2 */,
 /* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -220,11 +147,11 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _bfs = __webpack_require__(4);
+var _bfs = __webpack_require__(7);
 
 var _bfs2 = _interopRequireDefault(_bfs);
 
-var _dfs = __webpack_require__(5);
+var _dfs = __webpack_require__(8);
 
 var _dfs2 = _interopRequireDefault(_dfs);
 
@@ -276,7 +203,10 @@ Grid.makeGrid = function (size, random) {
 exports.default = Grid;
 
 /***/ }),
-/* 4 */
+/* 4 */,
+/* 5 */,
+/* 6 */,
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -362,7 +292,7 @@ var BreadthFirstSearch = function () {
 exports.default = BreadthFirstSearch;
 
 /***/ }),
-/* 5 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -446,6 +376,81 @@ var DepthFirstSearch = function () {
 }();
 
 exports.default = DepthFirstSearch;
+
+/***/ }),
+/* 9 */,
+/* 10 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _grid = __webpack_require__(3);
+
+var _grid2 = _interopRequireDefault(_grid);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var View = function () {
+  function View($el, algo) {
+    _classCallCheck(this, View);
+
+    this.$el = $el;
+    this.grid = new _grid2.default(25);
+    if (algo === "DFS") {
+      this.visited = Object.keys(this.grid.dfs.visited);
+      this.path = this.grid.dfs.solve();
+    } else if (algo === "BFS") {
+      this.visited = Object.keys(this.grid.bfs.visited);
+      this.path = this.grid.bfs.solve();
+    }
+  }
+
+  _createClass(View, [{
+    key: "makeGrid",
+    value: function makeGrid() {
+      var html = "";
+      for (var i = 0; i < this.grid.size; i++) {
+        html += "<ul>";
+        for (var j = 0; j < this.grid.size; j++) {
+          if (i === this.grid.startPos[0] && j === this.grid.startPos[1]) {
+            html += "<li class=start></li>";
+          } else if (i === this.grid.goalPos[0] && j === this.grid.goalPos[1]) {
+            html += "<li class=goal></li>";
+          } else if (this.path.includes(i * this.grid.size + j)) {
+            html += "<li class=path></li>";
+          } else if (this.visited.includes(i * this.grid.size + j)) {
+            html += "<li class=visited></li>";
+          } else if (this.grid.array[i][j]) {
+            html += "<li class=empty></li>";
+          } else {
+            html += "<li class=wall></li>";
+          }
+        }
+        html += "</ul>";
+      }
+
+      this.$el.html(html);
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      this.makeGrid();
+    }
+  }]);
+
+  return View;
+}();
+
+exports.default = View;
 
 /***/ })
 /******/ ]);
