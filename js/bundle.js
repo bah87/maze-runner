@@ -91,17 +91,17 @@ var Node = function () {
 
   _createClass(Node, [{
     key: "calcHeuristic",
-    value: function calcHeuristic(fromNode) {
+    value: function calcHeuristic(fromNode, heuristic) {
       // This is the heuristic for A*
       // Setting this.weight to result to be compatible with binary heap
-      this.costSoFar = fromNode.costSoFar + fromNode.costToPos(this.pos);
+      this.costSoFar = fromNode.costSoFar + fromNode.costToPos(this.pos, heuristic);
       this.goalPos = fromNode.goalPos;
-      this.weight = this.costSoFar + this.costToPos(fromNode.goalPos);
+      this.weight = this.costSoFar + this.costToPos(fromNode.goalPos, heuristic);
       return this.weight;
     }
   }, {
     key: "costToPos",
-    value: function costToPos(pos) {
+    value: function costToPos(pos, heuristic) {
       var _pos = _slicedToArray(this.pos, 2),
           y1 = _pos[0],
           x1 = _pos[1];
@@ -110,15 +110,15 @@ var Node = function () {
           y2 = _pos2[0],
           x2 = _pos2[1];
 
-      // straight line distance
-      // let aSquared = Math.pow(x2 - x1, 2);
-      // let bSquared = Math.pow(y2 - y1, 2);
-      // return Math.pow(aSquared + bSquared, 0.5);
-
-      // manhattan distance
-
-
-      return Math.abs(x2 - x1) + Math.abs(y2 - y1);
+      if (heuristic === "SL") {
+        // straight line distance
+        var aSquared = Math.pow(x2 - x1, 2);
+        var bSquared = Math.pow(y2 - y1, 2);
+        return Math.pow(aSquared + bSquared, 0.5);
+      } else if (heuristic === "M") {
+        // manhattan distance
+        return Math.abs(x2 - x1) + Math.abs(y2 - y1);
+      }
     }
   }, {
     key: "neighbors",
@@ -175,13 +175,15 @@ $(function () {
   maze.generate(canvasEl);
   var bfsClicked = false;
   var dfsClicked = false;
-  var astarClicked = false;
+  var astarmClicked = false;
+  var astarslClicked = false;
 
   $(".maze-btns").append("<button class=maze-regen>Prim's Algorithm</button>");
   $(".maze-regen").on("click", function () {
     bfsClicked = false;
     dfsClicked = false;
-    astarClicked = false;
+    astarmClicked = false;
+    astarslClicked = false;
     maze.generate(canvasEl);
   });
 
@@ -207,14 +209,25 @@ $(function () {
     }
   });
 
-  $(".search-btns").append("<button class=astar>A* Algorithm</button>");
-  $(".astar").hover(function () {
+  $(".search-btns").append("<button class=astar-m>A* (Manhattan Heuristic)</button>");
+  $(".astar-m").on("click", function () {
     maze.quickRegen();
-    if (astarClicked) {
-      maze.quickDisplay("A*");
+    if (astarmClicked) {
+      maze.quickDisplay("A*m");
     } else {
-      astarClicked = true;
-      maze.displayVisited("A*");
+      astarmClicked = true;
+      maze.displayVisited("A*m");
+    }
+  });
+
+  $(".search-btns").append("<button class=astar-sl>A* (Straight-Line Heuristic)</button>");
+  $(".astar-sl").on("click", function () {
+    maze.quickRegen();
+    if (astarslClicked) {
+      maze.quickDisplay("A*sl");
+    } else {
+      astarslClicked = true;
+      maze.displayVisited("A*sl");
     }
   });
 });
@@ -359,9 +372,13 @@ var GenerateMaze = function () {
           path = this.nodesToEdges(this.pathDFS);
           visited = this.visitedDFS;
           break;
-        case "A*":
-          path = this.nodesToEdges(this.pathAstar);
-          visited = this.visitedAstar;
+        case "A*m":
+          path = this.nodesToEdges(this.pathAstarM);
+          visited = this.visitedAstarM;
+          break;
+        case "A*sl":
+          path = this.nodesToEdges(this.pathAstarSL);
+          visited = this.visitedAstarSL;
           break;
       }
 
@@ -394,11 +411,17 @@ var GenerateMaze = function () {
           this.pathDFS = results[0];
           this.visitedDFS = results[1].slice();
           break;
-        case "A*":
-          this.search = new _a_star2.default(this.grid);
+        case "A*m":
+          this.search = new _a_star2.default(this.grid, "M");
           results = this.search.solve();
-          this.pathAstar = results[0];
-          this.visitedAstar = results[1].slice();
+          this.pathAstarM = results[0];
+          this.visitedAstarM = results[1].slice();
+          break;
+        case "A*sl":
+          this.search = new _a_star2.default(this.grid, "SL");
+          results = this.search.solve();
+          this.pathAstarSL = results[0];
+          this.visitedAstarSL = results[1].slice();
           break;
       }
       this.path = results[0];
@@ -903,7 +926,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var AStar = function () {
-  function AStar(grid) {
+  function AStar(grid, heuristic) {
     _classCallCheck(this, AStar);
 
     this.pq = new _binary_heap2.default();
@@ -914,6 +937,7 @@ var AStar = function () {
       save: []
     };
     this.goalValue = grid.goalPos[0] * grid.width + grid.goalPos[1];
+    this.heuristic = heuristic;
     this.setupPriorityQueue();
   }
 
@@ -927,7 +951,7 @@ var AStar = function () {
       var startNode = this.grid.array[startY][startX];
       startNode.costSoFar = 0;
       startNode.goalPos = this.grid.goalPos;
-      startNode.calcHeuristic(startNode);
+      startNode.calcHeuristic(startNode, this.heuristic);
       startNode.parent = null;
       this.visited.bool[startNode.value] = true;
       this.pq.put(startNode);
@@ -949,7 +973,7 @@ var AStar = function () {
         }
 
         current.edgeNeighbors.forEach(function (neighbor) {
-          var newCost = neighbor.calcHeuristic(current);
+          var newCost = neighbor.calcHeuristic(current, _this.heuristic);
 
           if (!_this.visited.bool[neighbor.value] || newCost < neighbor.weight) {
             _this.visited.bool[neighbor.value] = true;

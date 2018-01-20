@@ -2,7 +2,7 @@ import BinaryMinHeap from './binary_heap';
 import Edge from './edge';
 
 class AStar {
-  constructor(grid) {
+  constructor(grid, heuristic) {
     this.pq = new BinaryMinHeap();
     this.grid = grid;
     this.visited = {
@@ -11,6 +11,7 @@ class AStar {
       save: []
     };
     this.goalValue = grid.goalPos[0] * grid.width + grid.goalPos[1];
+    this.heuristic = heuristic;
     this.setupPriorityQueue();
   }
 
@@ -19,7 +20,7 @@ class AStar {
     let startNode = this.grid.array[startY][startX];
     startNode.costSoFar = 0;
     startNode.goalPos = this.grid.goalPos;
-    startNode.calcHeuristic(startNode);
+    startNode.calcHeuristic(startNode, this.heuristic);
     startNode.parent = null;
     this.visited.bool[startNode.value] = true;
     this.pq.put(startNode);
@@ -36,7 +37,7 @@ class AStar {
       }
 
       current.edgeNeighbors.forEach(neighbor => {
-        let newCost = neighbor.calcHeuristic(current);
+        let newCost = neighbor.calcHeuristic(current, this.heuristic);
 
         if (!this.visited.bool[neighbor.value]
             || newCost < neighbor.weight) {

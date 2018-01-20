@@ -91,9 +91,13 @@ class GenerateMaze {
         path = this.nodesToEdges(this.pathDFS);
         visited = this.visitedDFS;
         break;
-      case "A*":
-        path = this.nodesToEdges(this.pathAstar);
-        visited = this.visitedAstar;
+      case "A*m":
+        path = this.nodesToEdges(this.pathAstarM);
+        visited = this.visitedAstarM;
+        break;
+      case "A*sl":
+        path = this.nodesToEdges(this.pathAstarSL);
+        visited = this.visitedAstarSL;
         break;
     }
 
@@ -123,11 +127,17 @@ class GenerateMaze {
         this.pathDFS = results[0];
         this.visitedDFS = results[1].slice();
         break;
-      case "A*":
-        this.search = new AStar(this.grid);
+      case "A*m":
+        this.search = new AStar(this.grid, "M");
         results = this.search.solve();
-        this.pathAstar = results[0];
-        this.visitedAstar = results[1].slice();
+        this.pathAstarM = results[0];
+        this.visitedAstarM = results[1].slice();
+        break;
+      case "A*sl":
+        this.search = new AStar(this.grid, "SL");
+        results = this.search.solve();
+        this.pathAstarSL = results[0];
+        this.visitedAstarSL = results[1].slice();
         break;
     }
     this.path = results[0];

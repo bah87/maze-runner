@@ -10,13 +10,15 @@ $(() => {
   maze.generate(canvasEl);
   let bfsClicked = false;
   let dfsClicked = false;
-  let astarClicked = false;
+  let astarmClicked = false;
+  let astarslClicked = false;
 
   $(".maze-btns").append("<button class=maze-regen>Prim's Algorithm</button>");
   $(".maze-regen").on("click", () => {
     bfsClicked = false;
     dfsClicked = false;
-    astarClicked = false;
+    astarmClicked = false;
+    astarslClicked = false;
     maze.generate(canvasEl);
   });
 
@@ -42,14 +44,25 @@ $(() => {
     }
   });
 
-  $(".search-btns").append("<button class=astar>A* Algorithm</button>");
-  $(".astar").hover(() => {
+  $(".search-btns").append("<button class=astar-m>A* (Manhattan Heuristic)</button>");
+  $(".astar-m").on("click", () => {
     maze.quickRegen();
-    if (astarClicked) {
-      maze.quickDisplay("A*");
+    if (astarmClicked) {
+      maze.quickDisplay("A*m");
     } else {
-      astarClicked = true;
-      maze.displayVisited("A*");
+      astarmClicked = true;
+      maze.displayVisited("A*m");
+    }
+  });
+
+  $(".search-btns").append("<button class=astar-sl>A* (Straight-Line Heuristic)</button>");
+  $(".astar-sl").on("click", () => {
+    maze.quickRegen();
+    if (astarslClicked) {
+      maze.quickDisplay("A*sl");
+    } else {
+      astarslClicked = true;
+      maze.displayVisited("A*sl");
     }
   });
 });

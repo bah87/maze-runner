@@ -5,26 +5,28 @@ class Node {
     this.edgeNeighbors = [];
   }
 
-  calcHeuristic(fromNode) {
+  calcHeuristic(fromNode, heuristic) {
     // This is the heuristic for A*
     // Setting this.weight to result to be compatible with binary heap
-    this.costSoFar = fromNode.costSoFar + fromNode.costToPos(this.pos);
+    this.costSoFar = fromNode.costSoFar + fromNode.costToPos(this.pos, heuristic);
     this.goalPos = fromNode.goalPos;
-    this.weight = this.costSoFar + this.costToPos(fromNode.goalPos);
+    this.weight = this.costSoFar + this.costToPos(fromNode.goalPos, heuristic);
     return this.weight;
   }
 
-  costToPos(pos) {
+  costToPos(pos, heuristic) {
     let [y1, x1] = this.pos;
     let [y2, x2] = pos;
 
-    // straight line distance
-    // let aSquared = Math.pow(x2 - x1, 2);
-    // let bSquared = Math.pow(y2 - y1, 2);
-    // return Math.pow(aSquared + bSquared, 0.5);
-
-    // manhattan distance
-    return Math.abs(x2 - x1) + Math.abs(y2 - y1);
+    if (heuristic === "SL") {
+      // straight line distance
+      let aSquared = Math.pow(x2 - x1, 2);
+      let bSquared = Math.pow(y2 - y1, 2);
+      return Math.pow(aSquared + bSquared, 0.5);
+    } else if (heuristic === "M") {
+      // manhattan distance
+      return Math.abs(x2 - x1) + Math.abs(y2 - y1);  
+    }
   }
 
   neighbors() {
