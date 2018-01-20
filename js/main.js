@@ -39,6 +39,8 @@ $(() => {
 
   $(".maze-regen").on("click", () => {
     maze.generate(canvasEl);
+    $(".info").addClass("hidden");
+    $(".recenttrav").addClass("hidden");
     $(".prims").removeClass("hidden");
   });
 
@@ -50,65 +52,25 @@ $(() => {
 
   $(".BFS-recent").mouseenter(() => {
     handleHover("BFS");
+  }).mouseleave(() => {
+    handleHover(lastAction);
   });
 
   $(".DFS-recent").mouseenter(() => {
     handleHover("DFS");
+  }).mouseleave(() => {
+    handleHover(lastAction);
   });
 
   $(".AstarM-recent").mouseenter(() => {
     handleHover("AstarM");
+  }).mouseleave(() => {
+    handleHover(lastAction);
   });
 
   $(".AstarSL-recent").mouseenter(() => {
     handleHover("AstarSL");
-  });
-
-  $(".recent").mouseleave((event) => {
+  }).mouseleave(() => {
     handleHover(lastAction);
   });
-
-  // // BFS
-  // $(".BFS").on("click", () => {
-  //   // handleClick("BFS");
-  // });
-  //
-  // $(".BFS-recent").mouseenter(() => {
-  //   handleHover("BFS");
-  // });
-  //
-
-  //
-  // // DFS
-  // $(".DFS").on("click", () => {
-  //   // handleClick("DFS");
-  // });
-  //
-
-  //
-  // $(".DFS-recent").mouseleave(() => {
-  //   handleHover(lastAction);
-  // });
-  //
-  // // A* Manhattan
-  // $(".AstarM").on("click", () => {
-  //   // handleClick("AstarM");
-  // });
-  //
-
-  //
-  // $(".AstarM-recent").mouseleave(() => {
-  //   handleHover(lastAction);
-  // });
-  //
-  // // A* Straight-Line
-  // $(".AstarSL").on("click", () => {
-  //   // handleClick("AstarSL");
-  // });
-  //
-
-  //
-  // $(".AstarSL-recent").mouseleave(() => {
-  //   handleHover(lastAction);
-  // });
 });

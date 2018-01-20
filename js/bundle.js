@@ -376,6 +376,8 @@ $(function () {
 
   $(".maze-regen").on("click", function () {
     maze.generate(canvasEl);
+    $(".info").addClass("hidden");
+    $(".recenttrav").addClass("hidden");
     $(".prims").removeClass("hidden");
   });
 
@@ -387,67 +389,27 @@ $(function () {
 
   $(".BFS-recent").mouseenter(function () {
     handleHover("BFS");
+  }).mouseleave(function () {
+    handleHover(lastAction);
   });
 
   $(".DFS-recent").mouseenter(function () {
     handleHover("DFS");
+  }).mouseleave(function () {
+    handleHover(lastAction);
   });
 
   $(".AstarM-recent").mouseenter(function () {
     handleHover("AstarM");
+  }).mouseleave(function () {
+    handleHover(lastAction);
   });
 
   $(".AstarSL-recent").mouseenter(function () {
     handleHover("AstarSL");
-  });
-
-  $(".recent").mouseleave(function (event) {
+  }).mouseleave(function () {
     handleHover(lastAction);
   });
-
-  // // BFS
-  // $(".BFS").on("click", () => {
-  //   // handleClick("BFS");
-  // });
-  //
-  // $(".BFS-recent").mouseenter(() => {
-  //   handleHover("BFS");
-  // });
-  //
-
-  //
-  // // DFS
-  // $(".DFS").on("click", () => {
-  //   // handleClick("DFS");
-  // });
-  //
-
-  //
-  // $(".DFS-recent").mouseleave(() => {
-  //   handleHover(lastAction);
-  // });
-  //
-  // // A* Manhattan
-  // $(".AstarM").on("click", () => {
-  //   // handleClick("AstarM");
-  // });
-  //
-
-  //
-  // $(".AstarM-recent").mouseleave(() => {
-  //   handleHover(lastAction);
-  // });
-  //
-  // // A* Straight-Line
-  // $(".AstarSL").on("click", () => {
-  //   // handleClick("AstarSL");
-  // });
-  //
-
-  //
-  // $(".AstarSL-recent").mouseleave(() => {
-  //   handleHover(lastAction);
-  // });
 });
 
 /***/ }),
