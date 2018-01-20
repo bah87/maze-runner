@@ -8,6 +8,7 @@ $(() => {
   canvasEl.width = width * 20 + 40;
   const maze = new GenerateMaze(canvasEl, width, height);
   maze.generate(canvasEl);
+  $(".prims").removeClass("hidden");
   let bfsClicked = false;
   let dfsClicked = false;
   let astarmClicked = false;
@@ -20,6 +21,7 @@ $(() => {
     astarmClicked = false;
     astarslClicked = false;
     maze.generate(canvasEl);
+    $(".prims").removeClass("hidden");
   });
 
   $(".search-btns").append("<button class=bfs>Breadth First Search</button>");
@@ -31,6 +33,8 @@ $(() => {
       bfsClicked = true;
       maze.displayVisited("BFS");
     }
+    $(".info").addClass("hidden");
+    $(".bfs").removeClass("hidden");
   });
 
   $(".search-btns").append("<button class=dfs>Depth First Search</button>");
@@ -42,6 +46,8 @@ $(() => {
       dfsClicked = true;
       maze.displayVisited("DFS");
     }
+    $(".info").addClass("hidden");
+    $(".dfs").removeClass("hidden");
   });
 
   $(".search-btns").append("<button class=astar-m>A* (Manhattan Heuristic)</button>");
@@ -53,6 +59,8 @@ $(() => {
       astarmClicked = true;
       maze.displayVisited("A*m");
     }
+    $(".info").addClass("hidden");
+    $(".astar").removeClass("hidden");
   });
 
   $(".search-btns").append("<button class=astar-sl>A* (Straight-Line Heuristic)</button>");
@@ -64,5 +72,7 @@ $(() => {
       astarslClicked = true;
       maze.displayVisited("A*sl");
     }
+    $(".info").addClass("hidden");
+    $(".astar").removeClass("hidden");
   });
 });
