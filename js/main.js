@@ -29,136 +29,86 @@ $(() => {
     $(`.${searchType}`).removeClass("hidden");
   };
 
-  // let bfsClicked = false;
-  // let dfsClicked = false;
-  // let astarmClicked = false;
-  // let astarslClicked = false;
-
   $(".maze-btns").append("<button class=maze-regen>Prim's Algorithm</button>");
   $(".search-btns").append("<button class=BFS>Breadth First Search</button>");
   $(".search-btns").append("<button class=DFS>Depth First Search</button>");
   $(".search-btns").append("<button class=AstarM>A* (Manhattan Heuristic)</button>");
   $(".search-btns").append("<button class=AstarSL>A* (Straight-Line Heuristic)</button>");
 
+  const clickNames = ["BFS", "DFS", "AstarM", "AstarSL"];
 
   $(".maze-regen").on("click", () => {
-    // bfsClicked = false;
-    // dfsClicked = false;
-    // astarmClicked = false;
-    // astarslClicked = false;
     maze.generate(canvasEl);
     $(".prims").removeClass("hidden");
   });
 
-
-  $(".BFS").on("click", () => {
-    handleClick("BFS");
-
-    // maze.quickRegen();
-    // if (bfsClicked) {
-    //   maze.quickDisplay("BFS");
-    // } else {
-    //   bfsClicked = true;
-    //   maze.displayVisited("BFS");
-    // }
-    // $(".info").addClass("hidden");
-    // $(".bfs").removeClass("hidden");
-    // $(".bfs-recent").removeClass("hidden");
+  $(".search-btns").on("click", (event) => {
+    if (clickNames.includes(event.target.className)) {
+      handleClick(event.target.className);
+    }
   });
 
   $(".BFS-recent").mouseenter(() => {
     handleHover("BFS");
   });
 
-  $(".BFS-recent").mouseleave(() => {
-    handleHover(lastAction);
-  });
-
-
-  $(".DFS").on("click", () => {
-    handleClick("DFS");
-
-    // maze.quickRegen();
-    // if (dfsClicked) {
-    //   maze.quickDisplay("DFS");
-    // } else {
-    //   dfsClicked = true;
-    //   maze.displayVisited("DFS");
-    // }
-    // $(".info").addClass("hidden");
-    // $(".dfs").removeClass("hidden");
-    // $(".dfs-recent").removeClass("hidden");
-  });
-
   $(".DFS-recent").mouseenter(() => {
     handleHover("DFS");
-  });
-
-  $(".DFS-recent").mouseleave(() => {
-    handleHover(lastAction);
-  });
-
-
-  $(".AstarM").on("click", () => {
-    handleClick("AstarM");
-
-    // maze.quickRegen();
-    // if (astarmClicked) {
-    //   maze.quickDisplay("A*m");
-    // } else {
-    //   astarmClicked = true;
-    //   maze.displayVisited("A*m");
-    // }
-    // $(".info").addClass("hidden");
-    // $(".astar").removeClass("hidden");
-    // $(".astar-m-recent").removeClass("hidden");
   });
 
   $(".AstarM-recent").mouseenter(() => {
     handleHover("AstarM");
   });
 
-  $(".AstarM-recent").mouseleave(() => {
-    handleHover(lastAction);
-  });
-
-
-  $(".AstarSL").on("click", () => {
-    handleClick("AstarSL");
-
-    // maze.quickRegen();
-    // if (astarslClicked) {
-    //   maze.quickDisplay("A*sl");
-    // } else {
-    //   astarslClicked = true;
-    //   maze.displayVisited("A*sl");
-    // }
-    // $(".info").addClass("hidden");
-    // $(".astar").removeClass("hidden");
-    // $(".astar-sl-recent").removeClass("hidden");
-  });
-
   $(".AstarSL-recent").mouseenter(() => {
     handleHover("AstarSL");
   });
 
-  $(".AstarSL-recent").mouseleave(() => {
+  $(".recent").mouseleave((event) => {
     handleHover(lastAction);
   });
 
+  // // BFS
+  // $(".BFS").on("click", () => {
+  //   // handleClick("BFS");
+  // });
+  //
+  // $(".BFS-recent").mouseenter(() => {
+  //   handleHover("BFS");
+  // });
+  //
 
-  // $(".astar-sl-recent").mouseenter(() => {
-  //   maze.quickRegen();
-  //   maze.quickDisplay("A*sl");
-  //   $(".info").addClass("hidden");
-  //   $(".astar").removeClass("hidden");
+  //
+  // // DFS
+  // $(".DFS").on("click", () => {
+  //   // handleClick("DFS");
   // });
   //
-  // $(".astar-m-recent").mouseleave(() => {
-  //   runLastAction(lastAction);
+
+  //
+  // $(".DFS-recent").mouseleave(() => {
+  //   handleHover(lastAction);
   // });
   //
-  // const runLastAction = (lastAction) => {
+  // // A* Manhattan
+  // $(".AstarM").on("click", () => {
+  //   // handleClick("AstarM");
+  // });
   //
-  // };
+
+  //
+  // $(".AstarM-recent").mouseleave(() => {
+  //   handleHover(lastAction);
+  // });
+  //
+  // // A* Straight-Line
+  // $(".AstarSL").on("click", () => {
+  //   // handleClick("AstarSL");
+  // });
+  //
+
+  //
+  // $(".AstarSL-recent").mouseleave(() => {
+  //   handleHover(lastAction);
+  // });
 });
