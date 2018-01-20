@@ -69,10 +69,26 @@ button:hover {
   background-color: black;
 }
 
-button:focus {
+.search-btns button:focus {
   background-color: grey;
   outline: none;
   box-shadow: 10px 5px 5px black;
+}
+
+.maze-btns button:focus {
+  background-color: grey;
+  outline: none;
+  box-shadow: 10px 5px 5px black;
+}
+
+.recent button:hover {
+  cursor: default;
+}
+
+.recent button:focus {
+  box-shadow: none;
+  outline: none;
+  cursor: default;
 }
 
 .recent {
@@ -109,6 +125,10 @@ a {
 
 a:hover {
   opacity: 1;
+}
+
+.description h3 {
+  text-align: center;
 }
 
 .hidden {

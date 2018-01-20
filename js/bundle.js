@@ -372,6 +372,7 @@ $(function () {
     }
     $(".info").addClass("hidden");
     $(".bfs").removeClass("hidden");
+    $(".bfs-recent").removeClass("hidden");
   });
 
   $(".search-btns").append("<button class=dfs>Depth First Search</button>");
@@ -385,6 +386,7 @@ $(function () {
     }
     $(".info").addClass("hidden");
     $(".dfs").removeClass("hidden");
+    $(".dfs-recent").removeClass("hidden");
   });
 
   $(".search-btns").append("<button class=astar-m>A* (Manhattan Heuristic)</button>");
@@ -398,6 +400,7 @@ $(function () {
     }
     $(".info").addClass("hidden");
     $(".astar").removeClass("hidden");
+    $(".astar-m-recent").removeClass("hidden");
   });
 
   $(".search-btns").append("<button class=astar-sl>A* (Straight-Line Heuristic)</button>");
@@ -411,6 +414,7 @@ $(function () {
     }
     $(".info").addClass("hidden");
     $(".astar").removeClass("hidden");
+    $(".astar-sl-recent").removeClass("hidden");
   });
 });
 
