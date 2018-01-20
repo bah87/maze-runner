@@ -175,6 +175,7 @@ class GenerateMaze {
         renderedEdges.forEach(edge => {
           edge.render(this.ctx, "#1855a0");
         });
+        this.renderEndpoints(this.ctx);
 
         setTimeout(animateCallback, 1);
       }

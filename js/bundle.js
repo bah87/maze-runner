@@ -634,6 +634,7 @@ var GenerateMaze = function () {
           renderedEdges.forEach(function (edge) {
             edge.render(_this5.ctx, "#1855a0");
           });
+          _this5.renderEndpoints(_this5.ctx);
 
           setTimeout(animateCallback, 1);
         }

@@ -75,6 +75,10 @@ button:focus {
   box-shadow: 10px 5px 5px black;
 }
 
+.recent {
+  margin-top: 25px;
+}
+
 .contact-me {
   display: flex;
   flex-direction: column;
