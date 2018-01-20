@@ -345,6 +345,7 @@ $(function () {
   canvasEl.width = width * 20 + 40;
   var maze = new _generate_maze2.default(canvasEl, width, height);
   maze.generate(canvasEl);
+
   $(".prims").removeClass("hidden");
   var lastAction = null;
 

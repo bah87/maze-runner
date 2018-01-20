@@ -8,6 +8,7 @@ $(() => {
   canvasEl.width = width * 20 + 40;
   const maze = new GenerateMaze(canvasEl, width, height);
   maze.generate(canvasEl);
+
   $(".prims").removeClass("hidden");
   let lastAction = null;
 
