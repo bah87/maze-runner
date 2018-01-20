@@ -17,9 +17,14 @@ class Node {
   costToPos(pos) {
     let [y1, x1] = this.pos;
     let [y2, x2] = pos;
-    let aSquared = Math.pow(x2 - x1, 2);
-    let bSquared = Math.pow(y2 - y1, 2);
-    return Math.pow(aSquared + bSquared, 0.5);
+
+    // straight line distance
+    // let aSquared = Math.pow(x2 - x1, 2);
+    // let bSquared = Math.pow(y2 - y1, 2);
+    // return Math.pow(aSquared + bSquared, 0.5);
+
+    // manhattan distance
+    return Math.abs(x2 - x1) + Math.abs(y2 - y1);
   }
 
   neighbors() {

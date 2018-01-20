@@ -110,9 +110,15 @@ var Node = function () {
           y2 = _pos2[0],
           x2 = _pos2[1];
 
-      var aSquared = Math.pow(x2 - x1, 2);
-      var bSquared = Math.pow(y2 - y1, 2);
-      return Math.pow(aSquared + bSquared, 0.5);
+      // straight line distance
+      // let aSquared = Math.pow(x2 - x1, 2);
+      // let bSquared = Math.pow(y2 - y1, 2);
+      // return Math.pow(aSquared + bSquared, 0.5);
+
+      // manhattan distance
+
+
+      return Math.abs(x2 - x1) + Math.abs(y2 - y1);
     }
   }, {
     key: "neighbors",
@@ -161,8 +167,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 $(function () {
   var canvasEl = document.getElementsByTagName("canvas")[0];
-  var width = 40;
-  var height = 30;
+  var width = 34;
+  var height = 24;
   canvasEl.height = height * 20 + 40;
   canvasEl.width = width * 20 + 40;
   var maze = new _generate_maze2.default(canvasEl, width, height);
@@ -171,7 +177,7 @@ $(function () {
   var dfsClicked = false;
   var astarClicked = false;
 
-  $(".search-btns").append("<button class=maze-regen>Regenerate Maze</button>");
+  $(".maze-btns").append("<button class=maze-regen>Prim's Algorithm</button>");
   $(".maze-regen").on("click", function () {
     bfsClicked = false;
     dfsClicked = false;
@@ -179,7 +185,7 @@ $(function () {
     maze.generate(canvasEl);
   });
 
-  $(".search-btns").append("<button class=bfs>BFS</button>");
+  $(".search-btns").append("<button class=bfs>Breadth First Search</button>");
   $(".bfs").on("click", function () {
     maze.quickRegen();
     if (bfsClicked) {
@@ -190,7 +196,7 @@ $(function () {
     }
   });
 
-  $(".search-btns").append("<button class=dfs>DFS</button>");
+  $(".search-btns").append("<button class=dfs>Depth First Search</button>");
   $(".dfs").on("click", function () {
     maze.quickRegen();
     if (dfsClicked) {
@@ -201,7 +207,7 @@ $(function () {
     }
   });
 
-  $(".search-btns").append("<button class=astar>A*</button>");
+  $(".search-btns").append("<button class=astar>A* Algorithm</button>");
   $(".astar").hover(function () {
     maze.quickRegen();
     if (astarClicked) {
