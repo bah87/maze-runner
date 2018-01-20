@@ -47,6 +47,7 @@ h2 {
 
 .right {
   margin-top: 20px;
+  margin-right: 20px;
   width: 20%;
   height: 100%;
 }
@@ -129,6 +130,10 @@ a:hover {
 
 .description h3 {
   text-align: center;
+}
+
+.description p {
+  text-align: justify;
 }
 
 .hidden {

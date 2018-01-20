@@ -346,76 +346,152 @@ $(function () {
   var maze = new _generate_maze2.default(canvasEl, width, height);
   maze.generate(canvasEl);
   $(".prims").removeClass("hidden");
-  var bfsClicked = false;
-  var dfsClicked = false;
-  var astarmClicked = false;
-  var astarslClicked = false;
+  var lastAction = null;
+
+  var handleClick = function handleClick(searchType) {
+    maze.quickRegen();
+    maze.displayVisited(searchType);
+
+    $(".info").addClass("hidden");
+    $("." + searchType).removeClass("hidden");
+    $("." + searchType + "-recent").removeClass("hidden");
+
+    lastAction = searchType;
+  };
+
+  var handleHover = function handleHover(searchType) {
+    maze.quickRegen();
+    maze.quickDisplay(searchType);
+    $(".info").addClass("hidden");
+    $("." + searchType).removeClass("hidden");
+  };
+
+  // let bfsClicked = false;
+  // let dfsClicked = false;
+  // let astarmClicked = false;
+  // let astarslClicked = false;
 
   $(".maze-btns").append("<button class=maze-regen>Prim's Algorithm</button>");
+  $(".search-btns").append("<button class=BFS>Breadth First Search</button>");
+  $(".search-btns").append("<button class=DFS>Depth First Search</button>");
+  $(".search-btns").append("<button class=AstarM>A* (Manhattan Heuristic)</button>");
+  $(".search-btns").append("<button class=AstarSL>A* (Straight-Line Heuristic)</button>");
+
   $(".maze-regen").on("click", function () {
-    bfsClicked = false;
-    dfsClicked = false;
-    astarmClicked = false;
-    astarslClicked = false;
+    // bfsClicked = false;
+    // dfsClicked = false;
+    // astarmClicked = false;
+    // astarslClicked = false;
     maze.generate(canvasEl);
     $(".prims").removeClass("hidden");
   });
 
-  $(".search-btns").append("<button class=bfs>Breadth First Search</button>");
-  $(".bfs").on("click", function () {
-    maze.quickRegen();
-    if (bfsClicked) {
-      maze.quickDisplay("BFS");
-    } else {
-      bfsClicked = true;
-      maze.displayVisited("BFS");
-    }
-    $(".info").addClass("hidden");
-    $(".bfs").removeClass("hidden");
-    $(".bfs-recent").removeClass("hidden");
+  $(".BFS").on("click", function () {
+    handleClick("BFS");
+
+    // maze.quickRegen();
+    // if (bfsClicked) {
+    //   maze.quickDisplay("BFS");
+    // } else {
+    //   bfsClicked = true;
+    //   maze.displayVisited("BFS");
+    // }
+    // $(".info").addClass("hidden");
+    // $(".bfs").removeClass("hidden");
+    // $(".bfs-recent").removeClass("hidden");
   });
 
-  $(".search-btns").append("<button class=dfs>Depth First Search</button>");
-  $(".dfs").on("click", function () {
-    maze.quickRegen();
-    if (dfsClicked) {
-      maze.quickDisplay("DFS");
-    } else {
-      dfsClicked = true;
-      maze.displayVisited("DFS");
-    }
-    $(".info").addClass("hidden");
-    $(".dfs").removeClass("hidden");
-    $(".dfs-recent").removeClass("hidden");
+  $(".BFS-recent").mouseenter(function () {
+    handleHover("BFS");
   });
 
-  $(".search-btns").append("<button class=astar-m>A* (Manhattan Heuristic)</button>");
-  $(".astar-m").on("click", function () {
-    maze.quickRegen();
-    if (astarmClicked) {
-      maze.quickDisplay("A*m");
-    } else {
-      astarmClicked = true;
-      maze.displayVisited("A*m");
-    }
-    $(".info").addClass("hidden");
-    $(".astar").removeClass("hidden");
-    $(".astar-m-recent").removeClass("hidden");
+  $(".BFS-recent").mouseleave(function () {
+    handleHover(lastAction);
   });
 
-  $(".search-btns").append("<button class=astar-sl>A* (Straight-Line Heuristic)</button>");
-  $(".astar-sl").on("click", function () {
-    maze.quickRegen();
-    if (astarslClicked) {
-      maze.quickDisplay("A*sl");
-    } else {
-      astarslClicked = true;
-      maze.displayVisited("A*sl");
-    }
-    $(".info").addClass("hidden");
-    $(".astar").removeClass("hidden");
-    $(".astar-sl-recent").removeClass("hidden");
+  $(".DFS").on("click", function () {
+    handleClick("DFS");
+
+    // maze.quickRegen();
+    // if (dfsClicked) {
+    //   maze.quickDisplay("DFS");
+    // } else {
+    //   dfsClicked = true;
+    //   maze.displayVisited("DFS");
+    // }
+    // $(".info").addClass("hidden");
+    // $(".dfs").removeClass("hidden");
+    // $(".dfs-recent").removeClass("hidden");
   });
+
+  $(".DFS-recent").mouseenter(function () {
+    handleHover("DFS");
+  });
+
+  $(".DFS-recent").mouseleave(function () {
+    handleHover(lastAction);
+  });
+
+  $(".AstarM").on("click", function () {
+    handleClick("AstarM");
+
+    // maze.quickRegen();
+    // if (astarmClicked) {
+    //   maze.quickDisplay("A*m");
+    // } else {
+    //   astarmClicked = true;
+    //   maze.displayVisited("A*m");
+    // }
+    // $(".info").addClass("hidden");
+    // $(".astar").removeClass("hidden");
+    // $(".astar-m-recent").removeClass("hidden");
+  });
+
+  $(".AstarM-recent").mouseenter(function () {
+    handleHover("AstarM");
+  });
+
+  $(".AstarM-recent").mouseleave(function () {
+    handleHover(lastAction);
+  });
+
+  $(".AstarSL").on("click", function () {
+    handleClick("AstarSL");
+
+    // maze.quickRegen();
+    // if (astarslClicked) {
+    //   maze.quickDisplay("A*sl");
+    // } else {
+    //   astarslClicked = true;
+    //   maze.displayVisited("A*sl");
+    // }
+    // $(".info").addClass("hidden");
+    // $(".astar").removeClass("hidden");
+    // $(".astar-sl-recent").removeClass("hidden");
+  });
+
+  $(".AstarSL-recent").mouseenter(function () {
+    handleHover("AstarSL");
+  });
+
+  $(".AstarSL-recent").mouseleave(function () {
+    handleHover(lastAction);
+  });
+
+  // $(".astar-sl-recent").mouseenter(() => {
+  //   maze.quickRegen();
+  //   maze.quickDisplay("A*sl");
+  //   $(".info").addClass("hidden");
+  //   $(".astar").removeClass("hidden");
+  // });
+  //
+  // $(".astar-m-recent").mouseleave(() => {
+  //   runLastAction(lastAction);
+  // });
+  //
+  // const runLastAction = (lastAction) => {
+  //
+  // };
 });
 
 /***/ }),
@@ -558,11 +634,11 @@ var GenerateMaze = function () {
           path = this.nodesToEdges(this.pathDFS);
           visited = this.visitedDFS;
           break;
-        case "A*m":
+        case "AstarM":
           path = this.nodesToEdges(this.pathAstarM);
           visited = this.visitedAstarM;
           break;
-        case "A*sl":
+        case "AstarSL":
           path = this.nodesToEdges(this.pathAstarSL);
           visited = this.visitedAstarSL;
           break;
@@ -597,13 +673,13 @@ var GenerateMaze = function () {
           this.pathDFS = results[0];
           this.visitedDFS = results[1].slice();
           break;
-        case "A*m":
+        case "AstarM":
           this.search = new _a_star2.default(this.grid, "M");
           results = this.search.solve();
           this.pathAstarM = results[0];
           this.visitedAstarM = results[1].slice();
           break;
-        case "A*sl":
+        case "AstarSL":
           this.search = new _a_star2.default(this.grid, "SL");
           results = this.search.solve();
           this.pathAstarSL = results[0];
