@@ -1,24 +1,39 @@
 import Node from './node';
+import Edge from './edge';
 
-class BreadthFirstSearch {
-  constructor(startPos, goalPos, grid) {
-    this.queue = [new Node(startPos, startPos[0] * grid.size + startPos[1])];
-    this.visited = {};
-    this.goalNode = new Node(goalPos, goalPos[0] * grid.size + goalPos[1]);
-    this.grid = grid;
+class BreadthOrDepthFirstSearch {
+  constructor(grid, searchType) {
+    this.queue = [grid.array[grid.startPos[0]][grid.startPos[1]]];
+    this.visited = {
+      bool: new Array(grid.width * grid.height).fill(false),
+      all: [],
+      save: []
+    };
+    this.goalValue = grid.goalPos[0] * grid.width + grid.goalPos[1];
+    this.searchType = searchType;
   }
 
   traverseGrid() {
     while (this.queue.length > 0) {
-      let current = this.queue.shift();
-      this.visited[current.value] = true;
-      if (current.value === this.goalNode.value) {
+      let current;
+      if (this.searchType === "DFS") {
+        current = this.queue.pop();
+        this.visited.save.push(this.visited.all.pop());
+      } else {
+        current = this.queue.shift();
+        this.visited.save.push(this.visited.all.shift());
+      }
+      this.visited.bool[current.value] = true;
+      if (current.value === this.goalValue) {
         return current;
       }
 
-      current.grid = this.grid;
-      current.neighbors().forEach(neighbor => {
-        if (!this.queue.includes(neighbor) && !this.visited[neighbor.value]) {
+      current.edgeNeighbors.forEach(neighbor => {
+        if (!this.queue.includes(neighbor)
+            && !this.visited.bool[neighbor.value]) {
+
+          this.visited.all.push(new Edge(current, neighbor, true));
+
           neighbor.parent = current;
           this.queue.push(neighbor);
         }
@@ -28,11 +43,12 @@ class BreadthFirstSearch {
 
   traversePath() {
     let path = [this.traverseGrid()];
+
     while (path.slice(-1)[0].parent) {
       path.push(path.slice(-1)[0].parent);
     }
 
-    return path.map(node => { return node.value; });
+    return [path, this.visited.save.slice(1)];
   }
 
   solve() {
@@ -40,4 +56,4 @@ class BreadthFirstSearch {
   }
 }
 
-export default BreadthFirstSearch;
+export default BreadthOrDepthFirstSearch;
