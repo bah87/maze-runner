@@ -145,14 +145,16 @@ class GenerateMaze {
     this.path = results[0];
     this.visited = results[1];
 
-    const visitedEdges = this.visited;
+    const visitedEdges = this.visited.slice();
     const renderedEdges = [];
 
     const animateCallback = () => {
       if (visitedEdges.length > 0) {
         renderedEdges.push(visitedEdges.shift());
 
-        renderedEdges.forEach(edge => {
+        renderedEdges.forEach((edge, idx) => {
+          // let fract = idx / (this.visited.length - 1);
+          // fract = 20 + Math.floor(fract * 110);
           edge.render(this.ctx, "#cc700e");
         });
         this.renderEndpoints(this.ctx);
