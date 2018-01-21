@@ -344,13 +344,34 @@ $(function () {
   canvasEl.height = height * 20 + 40;
   canvasEl.width = width * 20 + 40;
 
+  $(".maze-btns").append("<button class=maze-regen>Prim's Algorithm</button>");
+  $(".search-btns").append("<button class=BFS>Breadth First Search</button>");
+  $(".search-btns").append("<button class=DFS>Depth First Search</button>");
+  $(".search-btns").append("<button class=AstarM>A* (Manhattan Heuristic)</button>");
+  $(".search-btns").append("<button class=AstarSL>A* (Straight-Line Heuristic)</button>");
+
+  var clickNames = ["BFS", "DFS", "AstarM", "AstarSL"];
+
+  var disableAllBtns = function disableAllBtns() {
+    clickNames.concat(["maze-regen"]).forEach(function (className) {
+      $("." + className).prop("disabled", true);
+      $("." + className + "-recent").unbind("mouseenter mouseleave");
+    });
+  };
+
   var enableAllBtns = function enableAllBtns() {
     clickNames.concat(["maze-regen"]).forEach(function (className) {
       $("." + className).prop("disabled", false);
+      $("." + className + "-recent").mouseenter(function () {
+        handleHover("" + className);
+      }).mouseleave(function () {
+        handleHover(lastAction);
+      });
     });
   };
 
   var maze = new _generate_maze2.default(canvasEl, width, height, enableAllBtns);
+  disableAllBtns();
   maze.generate(canvasEl);
 
   $(".prims").removeClass("hidden");
@@ -374,20 +395,6 @@ $(function () {
     $("." + searchType).removeClass("hidden");
   };
 
-  var clickNames = ["BFS", "DFS", "AstarM", "AstarSL"];
-
-  var disableAllBtns = function disableAllBtns() {
-    clickNames.concat(["maze-regen"]).forEach(function (className) {
-      $("." + className).prop("disabled", true);
-    });
-  };
-
-  $(".maze-btns").append("<button class=maze-regen>Prim's Algorithm</button>");
-  $(".search-btns").append("<button class=BFS>Breadth First Search</button>");
-  $(".search-btns").append("<button class=DFS>Depth First Search</button>");
-  $(".search-btns").append("<button class=AstarM>A* (Manhattan Heuristic)</button>");
-  $(".search-btns").append("<button class=AstarSL>A* (Straight-Line Heuristic)</button>");
-
   $(".maze-regen").on("click", function () {
     disableAllBtns();
     maze.generate(canvasEl);
@@ -401,30 +408,6 @@ $(function () {
       disableAllBtns();
       handleClick(event.target.className);
     }
-  });
-
-  $(".BFS-recent").mouseenter(function () {
-    handleHover("BFS");
-  }).mouseleave(function () {
-    handleHover(lastAction);
-  });
-
-  $(".DFS-recent").mouseenter(function () {
-    handleHover("DFS");
-  }).mouseleave(function () {
-    handleHover(lastAction);
-  });
-
-  $(".AstarM-recent").mouseenter(function () {
-    handleHover("AstarM");
-  }).mouseleave(function () {
-    handleHover(lastAction);
-  });
-
-  $(".AstarSL-recent").mouseenter(function () {
-    handleHover("AstarSL");
-  }).mouseleave(function () {
-    handleHover(lastAction);
   });
 });
 
