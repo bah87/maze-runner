@@ -6,13 +6,20 @@ $(() => {
   let height = 24;
   canvasEl.height = height * 20 + 40;
   canvasEl.width = width * 20 + 40;
-  const maze = new GenerateMaze(canvasEl, width, height);
+
+  const enableAllBtns = () => {
+    clickNames.concat(["maze-regen"]).forEach(className => {
+      $(`.${className}`).prop("disabled", false);
+    });
+  };
+
+  const maze = new GenerateMaze(canvasEl, width, height, enableAllBtns);
   maze.generate(canvasEl);
 
   $(".prims").removeClass("hidden");
   let lastAction = null;
 
-  const handleClick = (searchType) => {
+  const handleClick = searchType => {
     maze.quickRegen();
     maze.displayVisited(searchType);
 
@@ -23,11 +30,19 @@ $(() => {
     lastAction = searchType;
   };
 
-  const handleHover = (searchType) => {
+  const handleHover = searchType => {
     maze.quickRegen();
     maze.quickDisplay(searchType);
     $(".info").addClass("hidden");
     $(`.${searchType}`).removeClass("hidden");
+  };
+
+  const clickNames = ["BFS", "DFS", "AstarM", "AstarSL"];
+
+  const disableAllBtns = () => {
+    clickNames.concat(["maze-regen"]).forEach(className => {
+      $(`.${className}`).prop("disabled", true);
+    });
   };
 
   $(".maze-btns").append("<button class=maze-regen>Prim's Algorithm</button>");
@@ -36,9 +51,9 @@ $(() => {
   $(".search-btns").append("<button class=AstarM>A* (Manhattan Heuristic)</button>");
   $(".search-btns").append("<button class=AstarSL>A* (Straight-Line Heuristic)</button>");
 
-  const clickNames = ["BFS", "DFS", "AstarM", "AstarSL"];
 
   $(".maze-regen").on("click", () => {
+    disableAllBtns();
     maze.generate(canvasEl);
     $(".info").addClass("hidden");
     $(".recenttrav").addClass("hidden");
@@ -47,6 +62,7 @@ $(() => {
 
   $(".search-btns").on("click", (event) => {
     if (clickNames.includes(event.target.className)) {
+      disableAllBtns();
       handleClick(event.target.className);
     }
   });

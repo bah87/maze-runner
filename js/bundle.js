@@ -343,7 +343,14 @@ $(function () {
   var height = 24;
   canvasEl.height = height * 20 + 40;
   canvasEl.width = width * 20 + 40;
-  var maze = new _generate_maze2.default(canvasEl, width, height);
+
+  var enableAllBtns = function enableAllBtns() {
+    clickNames.concat(["maze-regen"]).forEach(function (className) {
+      $("." + className).prop("disabled", false);
+    });
+  };
+
+  var maze = new _generate_maze2.default(canvasEl, width, height, enableAllBtns);
   maze.generate(canvasEl);
 
   $(".prims").removeClass("hidden");
@@ -367,15 +374,22 @@ $(function () {
     $("." + searchType).removeClass("hidden");
   };
 
+  var clickNames = ["BFS", "DFS", "AstarM", "AstarSL"];
+
+  var disableAllBtns = function disableAllBtns() {
+    clickNames.concat(["maze-regen"]).forEach(function (className) {
+      $("." + className).prop("disabled", true);
+    });
+  };
+
   $(".maze-btns").append("<button class=maze-regen>Prim's Algorithm</button>");
   $(".search-btns").append("<button class=BFS>Breadth First Search</button>");
   $(".search-btns").append("<button class=DFS>Depth First Search</button>");
   $(".search-btns").append("<button class=AstarM>A* (Manhattan Heuristic)</button>");
   $(".search-btns").append("<button class=AstarSL>A* (Straight-Line Heuristic)</button>");
 
-  var clickNames = ["BFS", "DFS", "AstarM", "AstarSL"];
-
   $(".maze-regen").on("click", function () {
+    disableAllBtns();
     maze.generate(canvasEl);
     $(".info").addClass("hidden");
     $(".recenttrav").addClass("hidden");
@@ -384,6 +398,7 @@ $(function () {
 
   $(".search-btns").on("click", function (event) {
     if (clickNames.includes(event.target.className)) {
+      disableAllBtns();
       handleClick(event.target.className);
     }
   });
@@ -451,13 +466,14 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var GenerateMaze = function () {
-  function GenerateMaze(canvasEl, width, height) {
+  function GenerateMaze(canvasEl, width, height, enableAllBtns) {
     _classCallCheck(this, GenerateMaze);
 
     this.width = width * 20 + 10;
     this.height = height * 20 + 10;
     this.ctx = canvasEl.getContext("2d");
     this.setup(width, height);
+    this.enableAllBtns = enableAllBtns;
   }
 
   _createClass(GenerateMaze, [{
@@ -523,6 +539,7 @@ var GenerateMaze = function () {
           setTimeout(animateCallback, 1);
         } else {
           _this2.renderEndpoints(_this2.ctx);
+          _this2.enableAllBtns();
         }
       };
 
@@ -646,6 +663,8 @@ var GenerateMaze = function () {
           _this5.renderEndpoints(_this5.ctx);
 
           setTimeout(animateCallback, 1);
+        } else {
+          _this5.enableAllBtns();
         }
       };
 

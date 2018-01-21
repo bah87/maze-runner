@@ -5,11 +5,12 @@ import AStar from './a_star';
 import BreadthOrDepthFirstSearch from './bfs';
 
 class GenerateMaze {
-  constructor(canvasEl, width, height) {
+  constructor(canvasEl, width, height, enableAllBtns) {
     this.width = width * 20 + 10;
     this.height = height * 20 + 10;
     this.ctx = canvasEl.getContext("2d");
     this.setup(width, height);
+    this.enableAllBtns = enableAllBtns;
   }
 
   setup(width, height) {
@@ -65,6 +66,7 @@ class GenerateMaze {
         setTimeout(animateCallback, 1);
       } else {
         this.renderEndpoints(this.ctx);
+        this.enableAllBtns();
       }
     };
 
@@ -178,6 +180,8 @@ class GenerateMaze {
         this.renderEndpoints(this.ctx);
 
         setTimeout(animateCallback, 1);
+      } else {
+        this.enableAllBtns();
       }
     };
 
