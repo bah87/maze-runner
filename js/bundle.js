@@ -154,13 +154,17 @@ var Node = function () {
 
   _createClass(Node, [{
     key: "calcHeuristic",
-    value: function calcHeuristic(fromNode, heuristic) {
-      // This is the heuristic for A*
+    value: function calcHeuristic(fromNode, heuristic, dijkstra) {
+      // This is the heuristic for A* and Dijkstra's
       // Setting this.weight to result to be compatible with binary heap
       this.costSoFar = fromNode.costSoFar + fromNode.costToPos(this.pos, heuristic);
-      this.goalPos = fromNode.goalPos;
-      this.weight = this.costSoFar + this.costToPos(fromNode.goalPos, heuristic);
-      return this.weight;
+      if (dijkstra) {
+        return this.costSoFar;
+      } else {
+        this.goalPos = fromNode.goalPos;
+        this.weight = this.costSoFar + this.costToPos(fromNode.goalPos, heuristic);
+        return this.weight;
+      }
     }
   }, {
     key: "costToPos",
