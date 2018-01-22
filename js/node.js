@@ -12,14 +12,14 @@ class Node {
       this.pos, heuristic
     );
     if (dijkstra) {
-      return this.costSoFar;
+      this.weight = this.costSoFar;
     } else {
       this.goalPos = fromNode.goalPos;
       this.weight = this.costSoFar + this.costToPos(
         fromNode.goalPos, heuristic
       );
-      return this.weight;
     }
+    return this.weight;
   }
 
   costToPos(pos, heuristic) {

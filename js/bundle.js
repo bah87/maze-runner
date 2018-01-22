@@ -159,12 +159,12 @@ var Node = function () {
       // Setting this.weight to result to be compatible with binary heap
       this.costSoFar = fromNode.costSoFar + fromNode.costToPos(this.pos, heuristic);
       if (dijkstra) {
-        return this.costSoFar;
+        this.weight = this.costSoFar;
       } else {
         this.goalPos = fromNode.goalPos;
         this.weight = this.costSoFar + this.costToPos(fromNode.goalPos, heuristic);
-        return this.weight;
       }
+      return this.weight;
     }
   }, {
     key: "costToPos",
@@ -445,11 +445,11 @@ var _a_star = __webpack_require__(7);
 
 var _a_star2 = _interopRequireDefault(_a_star);
 
-var _dijkstra = __webpack_require__(9);
+var _dijkstra = __webpack_require__(8);
 
 var _dijkstra2 = _interopRequireDefault(_dijkstra);
 
-var _bfs = __webpack_require__(8);
+var _bfs = __webpack_require__(9);
 
 var _bfs2 = _interopRequireDefault(_bfs);
 
@@ -960,108 +960,6 @@ Object.defineProperty(exports, "__esModule", {
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _node = __webpack_require__(1);
-
-var _node2 = _interopRequireDefault(_node);
-
-var _edge = __webpack_require__(0);
-
-var _edge2 = _interopRequireDefault(_edge);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var BreadthOrDepthFirstSearch = function () {
-  function BreadthOrDepthFirstSearch(grid, searchType) {
-    _classCallCheck(this, BreadthOrDepthFirstSearch);
-
-    this.queue = [grid.array[grid.startPos[0]][grid.startPos[1]]];
-    this.visited = {
-      bool: new Array(grid.width * grid.height).fill(false),
-      all: [],
-      save: []
-    };
-    this.goalValue = grid.goalPos[0] * grid.width + grid.goalPos[1];
-    this.searchType = searchType;
-  }
-
-  _createClass(BreadthOrDepthFirstSearch, [{
-    key: 'traverseGrid',
-    value: function traverseGrid() {
-      var _this = this;
-
-      var _loop = function _loop() {
-        var current = void 0;
-        if (_this.searchType === "DFS") {
-          current = _this.queue.pop();
-          _this.visited.save.push(_this.visited.all.pop());
-        } else {
-          current = _this.queue.shift();
-          _this.visited.save.push(_this.visited.all.shift());
-        }
-        _this.visited.bool[current.value] = true;
-        if (current.value === _this.goalValue) {
-          return {
-            v: current
-          };
-        }
-
-        current.edgeNeighbors.forEach(function (neighbor) {
-          if (!_this.queue.includes(neighbor) && !_this.visited.bool[neighbor.value]) {
-
-            _this.visited.all.push(new _edge2.default(current, neighbor, true));
-
-            neighbor.parent = current;
-            _this.queue.push(neighbor);
-          }
-        });
-      };
-
-      while (this.queue.length > 0) {
-        var _ret = _loop();
-
-        if ((typeof _ret === 'undefined' ? 'undefined' : _typeof(_ret)) === "object") return _ret.v;
-      }
-    }
-  }, {
-    key: 'traversePath',
-    value: function traversePath() {
-      var path = [this.traverseGrid()];
-
-      while (path.slice(-1)[0].parent) {
-        path.push(path.slice(-1)[0].parent);
-      }
-
-      return [path, this.visited.save.slice(1)];
-    }
-  }, {
-    key: 'solve',
-    value: function solve() {
-      return this.traversePath();
-    }
-  }]);
-
-  return BreadthOrDepthFirstSearch;
-}();
-
-exports.default = BreadthOrDepthFirstSearch;
-
-/***/ }),
-/* 9 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
 var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -1168,6 +1066,108 @@ var Dijkstra = function () {
 }();
 
 exports.default = Dijkstra;
+
+/***/ }),
+/* 9 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _node = __webpack_require__(1);
+
+var _node2 = _interopRequireDefault(_node);
+
+var _edge = __webpack_require__(0);
+
+var _edge2 = _interopRequireDefault(_edge);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var BreadthOrDepthFirstSearch = function () {
+  function BreadthOrDepthFirstSearch(grid, searchType) {
+    _classCallCheck(this, BreadthOrDepthFirstSearch);
+
+    this.queue = [grid.array[grid.startPos[0]][grid.startPos[1]]];
+    this.visited = {
+      bool: new Array(grid.width * grid.height).fill(false),
+      all: [],
+      save: []
+    };
+    this.goalValue = grid.goalPos[0] * grid.width + grid.goalPos[1];
+    this.searchType = searchType;
+  }
+
+  _createClass(BreadthOrDepthFirstSearch, [{
+    key: 'traverseGrid',
+    value: function traverseGrid() {
+      var _this = this;
+
+      var _loop = function _loop() {
+        var current = void 0;
+        if (_this.searchType === "DFS") {
+          current = _this.queue.pop();
+          _this.visited.save.push(_this.visited.all.pop());
+        } else {
+          current = _this.queue.shift();
+          _this.visited.save.push(_this.visited.all.shift());
+        }
+        _this.visited.bool[current.value] = true;
+        if (current.value === _this.goalValue) {
+          return {
+            v: current
+          };
+        }
+
+        current.edgeNeighbors.forEach(function (neighbor) {
+          if (!_this.queue.includes(neighbor) && !_this.visited.bool[neighbor.value]) {
+
+            _this.visited.all.push(new _edge2.default(current, neighbor, true));
+
+            neighbor.parent = current;
+            _this.queue.push(neighbor);
+          }
+        });
+      };
+
+      while (this.queue.length > 0) {
+        var _ret = _loop();
+
+        if ((typeof _ret === 'undefined' ? 'undefined' : _typeof(_ret)) === "object") return _ret.v;
+      }
+    }
+  }, {
+    key: 'traversePath',
+    value: function traversePath() {
+      var path = [this.traverseGrid()];
+
+      while (path.slice(-1)[0].parent) {
+        path.push(path.slice(-1)[0].parent);
+      }
+
+      return [path, this.visited.save.slice(1)];
+    }
+  }, {
+    key: 'solve',
+    value: function solve() {
+      return this.traversePath();
+    }
+  }]);
+
+  return BreadthOrDepthFirstSearch;
+}();
+
+exports.default = BreadthOrDepthFirstSearch;
 
 /***/ })
 /******/ ]);
