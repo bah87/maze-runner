@@ -2,6 +2,7 @@ import Grid from './grid';
 import Prims from './prims';
 import Edge from './edge';
 import AStar from './a_star';
+import Dijkstra from './dijkstra';
 import BreadthOrDepthFirstSearch from './bfs';
 
 class GenerateMaze {
@@ -101,6 +102,10 @@ class GenerateMaze {
         path = this.nodesToEdges(this.pathAstarSL);
         visited = this.visitedAstarSL;
         break;
+      case "Dijkstra":
+        path = this.nodesToEdges(this.pathDijkstra);
+        visited = this.visitedDijkstra;
+        break;
     }
 
     visited.forEach(edge => {
@@ -140,6 +145,12 @@ class GenerateMaze {
         results = this.search.solve();
         this.pathAstarSL = results[0];
         this.visitedAstarSL = results[1].slice();
+        break;
+      case "Dijkstra":
+        this.search = new Dijkstra(this.grid, "M");
+        results = this.search.solve();
+        this.pathDijkstra = results[0];
+        this.visitedDijkstra = results[1].slice();
         break;
     }
     this.path = results[0];

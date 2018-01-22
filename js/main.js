@@ -10,10 +10,11 @@ $(() => {
   $(".maze-btns").append("<button class=maze-regen>Prim's Algorithm</button>");
   $(".search-btns").append("<button class=BFS>Breadth First Search</button>");
   $(".search-btns").append("<button class=DFS>Depth First Search</button>");
+  $(".search-btns").append("<button class=Dijkstra>Dijkstra's Algorithm</button>");
   $(".search-btns").append("<button class=AstarM>A* (Manhattan Heuristic)</button>");
   $(".search-btns").append("<button class=AstarSL>A* (Straight-Line Heuristic)</button>");
 
-  const clickNames = ["BFS", "DFS", "AstarM", "AstarSL"];
+  const clickNames = ["BFS", "DFS", "AstarM", "AstarSL", "Dijkstra"];
 
   const disableAllBtns = () => {
     clickNames.concat(["maze-regen"]).forEach(className => {

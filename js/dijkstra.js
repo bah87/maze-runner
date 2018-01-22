@@ -19,7 +19,7 @@ class Dijkstra {
     let [startY, startX] = this.grid.startPos;
     let startNode = this.grid.array[startY][startX];
     startNode.costSoFar = 0;
-    startNode.calcHeuristic(startNode, this.heuristic);
+    startNode.calcHeuristic(startNode, this.heuristic, true);
     startNode.parent = null;
     this.visited.bool[startNode.value] = true;
     this.pq.put(startNode);

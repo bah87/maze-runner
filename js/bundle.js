@@ -351,10 +351,11 @@ $(function () {
   $(".maze-btns").append("<button class=maze-regen>Prim's Algorithm</button>");
   $(".search-btns").append("<button class=BFS>Breadth First Search</button>");
   $(".search-btns").append("<button class=DFS>Depth First Search</button>");
+  $(".search-btns").append("<button class=Dijkstra>Dijkstra's Algorithm</button>");
   $(".search-btns").append("<button class=AstarM>A* (Manhattan Heuristic)</button>");
   $(".search-btns").append("<button class=AstarSL>A* (Straight-Line Heuristic)</button>");
 
-  var clickNames = ["BFS", "DFS", "AstarM", "AstarSL"];
+  var clickNames = ["BFS", "DFS", "AstarM", "AstarSL", "Dijkstra"];
 
   var disableAllBtns = function disableAllBtns() {
     clickNames.concat(["maze-regen"]).forEach(function (className) {
@@ -443,6 +444,10 @@ var _edge2 = _interopRequireDefault(_edge);
 var _a_star = __webpack_require__(7);
 
 var _a_star2 = _interopRequireDefault(_a_star);
+
+var _dijkstra = __webpack_require__(9);
+
+var _dijkstra2 = _interopRequireDefault(_dijkstra);
 
 var _bfs = __webpack_require__(8);
 
@@ -565,6 +570,10 @@ var GenerateMaze = function () {
           path = this.nodesToEdges(this.pathAstarSL);
           visited = this.visitedAstarSL;
           break;
+        case "Dijkstra":
+          path = this.nodesToEdges(this.pathDijkstra);
+          visited = this.visitedDijkstra;
+          break;
       }
 
       visited.forEach(function (edge) {
@@ -607,6 +616,12 @@ var GenerateMaze = function () {
           results = this.search.solve();
           this.pathAstarSL = results[0];
           this.visitedAstarSL = results[1].slice();
+          break;
+        case "Dijkstra":
+          this.search = new _dijkstra2.default(this.grid, "M");
+          results = this.search.solve();
+          this.pathDijkstra = results[0];
+          this.visitedDijkstra = results[1].slice();
           break;
       }
       this.path = results[0];
@@ -1033,6 +1048,126 @@ var BreadthOrDepthFirstSearch = function () {
 }();
 
 exports.default = BreadthOrDepthFirstSearch;
+
+/***/ }),
+/* 9 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _binary_heap = __webpack_require__(2);
+
+var _binary_heap2 = _interopRequireDefault(_binary_heap);
+
+var _edge = __webpack_require__(0);
+
+var _edge2 = _interopRequireDefault(_edge);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Dijkstra = function () {
+  function Dijkstra(grid, heuristic) {
+    _classCallCheck(this, Dijkstra);
+
+    this.pq = new _binary_heap2.default();
+    this.grid = grid;
+    this.visited = {
+      bool: new Array(grid.width * grid.height).fill(false),
+      pq: new _binary_heap2.default(),
+      save: []
+    };
+    this.heuristic = heuristic;
+    this.goalValue = grid.goalPos[0] * grid.width + grid.goalPos[1];
+    this.setupPriorityQueue();
+  }
+
+  _createClass(Dijkstra, [{
+    key: 'setupPriorityQueue',
+    value: function setupPriorityQueue() {
+      var _grid$startPos = _slicedToArray(this.grid.startPos, 2),
+          startY = _grid$startPos[0],
+          startX = _grid$startPos[1];
+
+      var startNode = this.grid.array[startY][startX];
+      startNode.costSoFar = 0;
+      startNode.calcHeuristic(startNode, this.heuristic, true);
+      startNode.parent = null;
+      this.visited.bool[startNode.value] = true;
+      this.pq.put(startNode);
+    }
+  }, {
+    key: 'traverseGrid',
+    value: function traverseGrid() {
+      var _this = this;
+
+      var _loop = function _loop() {
+        var current = _this.pq.take();
+
+        _this.visited.save.push(_this.visited.pq.take());
+
+        if (current.value === _this.goalValue) {
+          return {
+            v: current
+          };
+        }
+
+        current.edgeNeighbors.forEach(function (neighbor) {
+          var newCost = neighbor.calcHeuristic(current, _this.heuristic, true);
+
+          if (!_this.visited.bool[neighbor.value] || newCost < neighbor.weight) {
+            _this.visited.bool[neighbor.value] = true;
+            neighbor.weight = newCost;
+            neighbor.parent = current;
+            _this.pq.put(neighbor);
+
+            var edge = new _edge2.default(current, neighbor, true);
+            edge.weight = neighbor.weight;
+            _this.visited.pq.put(edge);
+          }
+        });
+      };
+
+      while (this.pq.length() > 1) {
+        var _ret = _loop();
+
+        if ((typeof _ret === 'undefined' ? 'undefined' : _typeof(_ret)) === "object") return _ret.v;
+      }
+    }
+  }, {
+    key: 'traversePath',
+    value: function traversePath() {
+      var path = [this.traverseGrid()];
+
+      while (path.slice(-1)[0].parent) {
+        path.push(path.slice(-1)[0].parent);
+      }
+
+      return [path, this.visited.save.slice(1)];
+    }
+  }, {
+    key: 'solve',
+    value: function solve() {
+      return this.traversePath();
+    }
+  }]);
+
+  return Dijkstra;
+}();
+
+exports.default = Dijkstra;
 
 /***/ })
 /******/ ]);
