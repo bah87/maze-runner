@@ -635,8 +635,6 @@ var GenerateMaze = function () {
           renderedEdges.push(visitedEdges.shift());
 
           renderedEdges.forEach(function (edge, idx) {
-            // let fract = idx / (this.visited.length - 1);
-            // fract = 20 + Math.floor(fract * 110);
             edge.render(_this4.ctx, "#cc700e");
           });
           _this4.renderEndpoints(_this4.ctx);

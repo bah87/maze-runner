@@ -164,8 +164,6 @@ class GenerateMaze {
         renderedEdges.push(visitedEdges.shift());
 
         renderedEdges.forEach((edge, idx) => {
-          // let fract = idx / (this.visited.length - 1);
-          // fract = 20 + Math.floor(fract * 110);
           edge.render(this.ctx, "#cc700e");
         });
         this.renderEndpoints(this.ctx);
