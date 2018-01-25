@@ -21,9 +21,15 @@ Prim's algorithm requires a priority queue to keep track of the edges. The most 
 ## Breadth-First Search
 ![](assets/README-132ecb30.gif)
 
-Breadth-First Search (BFS) is an algorithm that can be used for a number of tasks, but in this case will be used to find a path between randomly-chosen start and goal nodes. The algorithm works by expanding equally in all directions. In my implementation I use an early exit so that the algorithm stops as soon as it finds the goal.
+Figure 2. Visualization of BFS Traversing Maze and Constructing Path
+
+Breadth-First Search (BFS) is an algorithm that can be used for a number of tasks, but in this case will be used to find a path between randomly-chosen start and goal nodes. BFS is implemented with a queue. It starts by visiting a node, then adding all of that node's neighbors into the queue. Each time it adds a neighbor to the queue, it adds a pointer that references the neighboring node's parent. The reason for this is that it doesn't actually construct the path during its initial traversal of the graph. It repeats the process of visiting the nodes in the order they entered the queue until the queue is empty, which means all nodes have been visited, or until the goal node is found, since I use an early exit in my implementation. Once the traversal is complete, it starts at the goal node and follows the pointers until it reaches the start node.
 
 ![](assets/README-c795f06a.gif)
+
+Figure 3. Illustration of Order that Nodes are Visited in BFS
+
+As evident by Figure 3, BFS considers shallower nodes in the tree before moving onto their children, which is why in Figure 2 it expands equally in all directions away from the start node. Due to the nature of the maze, it may appear as if the algorithm is favoring the right side, but it is expanding evenly in the directions that are available to it.
 
 ## Depth-First Search
 ![](assets/README-8b258554.gif)
