@@ -33,13 +33,29 @@ As evident by Figure 3, BFS considers shallower nodes in the tree before moving 
 
 ## Depth-First Search
 ![](assets/README-8b258554.gif)
+
+Figure 4. Visualization of DFS Traversing Maze and Constructing Path
+
+Depth-First Search (DFS) is one alternative to BFS. Instead of visiting each neighbor before considering their children, it will plunge all the way to the bottom of the tree, continually choosing the first child, before retracing its steps, visiting children on the way up. This behavior is clearly evident by Figure 5, as it always chooses to go left until their are no children left. Figure 4 illustrates this nature as their are long distinct orange paths generated rather than the broad search performed by BFS.
+
 ![](assets/README-0b83cd5b.gif)
+
+Figure 5. Illustration of Order that Nodes are Visited in DFS
+
+DFS is implemented with a stack, where the last node added is the first one visited. It works similarly to BFS in the fact that with each node visited, it sets a pointer that references where it came from. These "bread crumbs" can be used later to trace the path from the goal back to the source. DFS will sometimes get lucky if the goal happens to be located down one of the routes that DFS traverses first, but it can also get unlucky if the goal is located on the right side of Figure 5.
 
 ## Dijkstra's Algorithm
 ![](assets/README-84d68b10.gif)
 
-## A*
+Figure 6. Visualization of Dijkstra's Algorithm Traversing Maze and Constructing Path
+
+## A* Algorithm
 ![](assets/README-bbb06bc4.gif)
+
+Figure 7. Visualization of A* Traversing Maze and Constructing Path
+
+## Event Handling
+
 
 ## Resources
 * https://bost.ocks.org/mike/algorithms/
