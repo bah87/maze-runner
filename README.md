@@ -49,6 +49,8 @@ DFS is implemented with a stack, where the last node added is the first one visi
 
 Figure 6. Visualization of Dijkstra's Algorithm Traversing Maze and Constructing Path
 
+Dijkstra's algorithm is a lot like BFS, except it incorporates a cost heuristic that tracks the cost of different moves and evaluates that before deciding which node to visit next. In order to accomplish this, it is implemented with a priority queue. Just like in my implementation of Prim's algorithm, I used a binary min heap to organize the existing edges in the queue by cost. Another difference between Dijkstra's and BFS is now that we're taking cost into account, we may end up visiting nodes multiple times. Dijkstra's keeps track of the cost from the start up to the current node, so if a node is ever encountered multiple times, it checks to see if the current cost is less than the value that node currently holds. If it is, Dijkstra's updates the cost and redirects the pointer to reference the parent in the cheaper direction. Dijkstra's algorithm is more effective in a scenario where traversing one path (like going over a mountain) would be more expensive than going around even though the path is more direct. It is not as obvious with the current maze setup that Dijkstra's is an improvement over BFS.
+
 ## A* Algorithm
 ![](assets/README-bbb06bc4.gif)
 
