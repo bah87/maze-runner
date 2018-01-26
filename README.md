@@ -1,6 +1,6 @@
 # Maze Runner
 
-See it [live](http://www.brenhiggins.com/MazeSolver/)!
+See it [live](http://www.brenhiggins.com/maze-runner/)!
 
 ## Background
 Maze Runner is a visualization tool for maze generation and path solving using JavaScript and HTML5 Canvas. It provides insight into the behavior of popular maze generation and traversal algorithms, such as Depth-First Search (DFS), Breadth-First Search (BFS), Dijkstra's Algorithm and A*.
