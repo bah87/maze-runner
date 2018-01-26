@@ -348,13 +348,6 @@ $(function () {
   canvasEl.height = height * 20 + 40;
   canvasEl.width = width * 20 + 40;
 
-  $(".maze-btns").append("<button class=maze-regen>Prim's Algorithm</button>");
-  $(".search-btns").append("<button class=BFS>Breadth First Search</button>");
-  $(".search-btns").append("<button class=DFS>Depth First Search</button>");
-  $(".search-btns").append("<button class=Dijkstra>Dijkstra's Algorithm</button>");
-  $(".search-btns").append("<button class=AstarM>A* (Manhattan Heuristic)</button>");
-  $(".search-btns").append("<button class=AstarSL>A* (Straight-Line Heuristic)</button>");
-
   var clickNames = ["BFS", "DFS", "AstarM", "AstarSL", "Dijkstra"];
 
   var disableAllBtns = function disableAllBtns() {
