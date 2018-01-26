@@ -73,7 +73,7 @@
       <div class="description">
         <div class="prims info hidden">
           <h3>Prim's Algorithm</h3>
-          <p>In computer science, Prim's algorithm is a greedy algorithm that finds a minimum spanning tree for a weighted undirected graph. This means it finds a subset of the edges that forms a tree that includes every vertex, where the total weight of all the edges in the tree is minimized. The algorithm operates by building this tree one vertex at a time, from an arbitrary starting vertex, at each step adding the cheapest possible connection from the tree to another vertex.</p>
+          <p>The maze is generated using Prim's algorithm, a greedy algorithm that grows a minimum spanning tree from a starting source node until it covers the entire graph. Each of the edges in the graph is assigned a random weight and the tree is built by selecting the cheapest edge that doesn't create a cycle. Prim's algorithm does not, however, select the cheapest edge that will connect any pair of vertices, but rather edges that will connect to the existing tree.</p>
           <a
             class="learn"
             target="_blank"
@@ -84,7 +84,7 @@
 
         <div class="BFS info hidden">
           <h3>BFS Algorithm</h3>
-          <p>Breadth-first search (BFS) is an algorithm for traversing or searching tree or graph data structures. It starts at the tree root (or some arbitrary node of a graph, sometimes referred to as a 'search key') and explores the neighbor nodes first, before moving to the next level neighbours.</p>
+          <p>Breadth-first search (BFS) is a search algorithm for traversing a graph or tree. It starts by visiting a node, then adds all of that node's neighbors into the queue. Each time it adds a neighbor to the queue, it adds a pointer that references the neighboring node's parent. Once the queue is empty, which means all nodes have been visited, or the goal node is found (for early-exit implementations), the pointers are traced from the goal back to the source.</p>
           <a
             class="learn"
             target="_blank"
@@ -95,7 +95,7 @@
 
         <div class="DFS info hidden">
           <h3>DFS Algorithm</h3>
-          <p>Depth-first search (DFS) is an algorithm for traversing or searching tree or graph data structures. One starts at the root (selecting some arbitrary node as the root in the case of a graph) and explores as far as possible along each branch before backtracking.</p>
+          <p>Depth-first search (DFS) is a search algorithm for traversing a graph or tree. Rather than considering its shallow neighbors first like BFS, it plunges all the way to the bottom of a given branch before considering the next neighbor. Once the stack is empty, which means all nodes have been visited, or the goal node is found (for early-exit implementations), the pointers are traced from the goal back to the source.</p>
           <a
             class="learn"
             target="_blank"
@@ -106,7 +106,8 @@
 
         <div class="AstarM info hidden">
           <h3>A* Algorithm (Manhattan)</h3>
-          <p>A* is an informed search algorithm, or a best-first search, meaning that it solves problems by searching among all possible paths to the solution (goal) for the one that incurs the smallest cost (least distance travelled, shortest time, etc.), and among these paths it first considers the ones that appear to lead most quickly to the solution. It is formulated in terms of weighted graphs: starting from a specific node of a graph, it constructs a tree of paths starting from that node, expanding paths one step at a time, until one of its paths ends at the predetermined goal node.</p>
+          <p>Unlike Dijkstra's algorithm, BFS and DFS, A* is an informed search algorithm.
+            A* is implemented by searching the possible paths to the goal and opting for the one that incurs the smallest cost. The cost used by A* is the actual distance incremented from the start to the current node plus the estimated distance to the goal. In this implementation, the Manhattan distance is used for the estimate, which is the distance to the goal in the vertical direction plus the distance to the goal in the horizontal direction.</p>
           <a
             class="learn"
             target="_blank"
@@ -117,7 +118,8 @@
 
         <div class="AstarSL info hidden">
           <h3>A* Algorithm (Straight-Line)</h3>
-          <p>A* is an informed search algorithm, or a best-first search, meaning that it solves problems by searching among all possible paths to the solution (goal) for the one that incurs the smallest cost (least distance travelled, shortest time, etc.), and among these paths it first considers the ones that appear to lead most quickly to the solution. It is formulated in terms of weighted graphs: starting from a specific node of a graph, it constructs a tree of paths starting from that node, expanding paths one step at a time, until one of its paths ends at the predetermined goal node.</p>
+          <p>Unlike Dijkstra's algorithm, BFS and DFS, A* is an informed search algorithm.
+            A* is implemented by searching the possible paths to the goal and opting for the one that incurs the smallest cost. The cost used by A* is the actual distance incremented from the start to the current node plus the estimated distance to the goal. In this implementation, the straight-line distance to the goal is used as the estimate.</p>
           <a
             class="learn"
             target="_blank"
@@ -128,7 +130,7 @@
 
         <div class="Dijkstra info hidden">
           <h3>Dijkstra's Algorithm</h3>
-          <p>The algorithm exists in many variants; Dijkstra's original variant found the shortest path between two nodes,[3] but a more common variant fixes a single node as the "source" node and finds shortest paths from the source to all other nodes in the graph, producing a shortest-path tree.</p>
+          <p>Dijkstra's algorithm is similar to BFS, except it incorporates a cost heuristic that tracks the cost of different moves and evaluates that before deciding which node to visit next. Dijkstra's algorithm results in a shortest-path tree to every node in the graph. The implementation displayed here incorporates an early exit, where the algorithm stops when the goal node is found, and the pointers are traced from the goal back to the start.</p>
           <a
             class="learn"
             target="_blank"
