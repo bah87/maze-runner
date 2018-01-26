@@ -56,6 +56,8 @@ Dijkstra's algorithm is a lot like BFS, except it incorporates a cost heuristic 
 
 Figure 7. Visualization of A* Traversing Maze and Constructing Path
 
+Unlike Dijkstra's algorithm, BFS and DFS, A* is an informed search algorithm. In other words, the other algorithms waste time exploring directions that aren't promising because they don't have knowledge of the goal. A* uses its awareness of the goal location to its advantage, and chooses its next neighbor to visit based on this knowledge. It is implemented almost exactly like Dijkstra's algorithm, except it also checks the approximate distance from its neighboring nodes to the goal as well as the known distance from the start to the neighbor. The cost to the start is an actual cost because it increments every time it moves to another neighbor. To determine the cost to the goal, there are a number of heuristics. Two popular options are Manhattan distance and straight-line distance. Manhattan distance is the sum of the difference in x coordinates and the difference in y coordinates. Straight-line distance is self-explanatory: the distance traveled between point a and point b in a straight line. It turns out that Manhattan distance is slightly better when using a 4 neighbor-approach, which the straight-line distance is preferred for an 8 neighbor-approach. This explains why the version of A* that uses the Manhattan distance in Maze Runner always visits slightly fewer nodes than the straight-line distance version. However, on a grid where moving diagonally is possible, straight-line distance would outperform Manhattan distance.
+
 ## Event Handling
 
 
